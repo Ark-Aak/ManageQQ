@@ -1,0 +1,56 @@
+enabled-groups:
+  - 764136404
+enabled-bots:
+  - 3566096221
+admin:
+  - 1265723427
+Action:
+  pay: true
+  server2qq: true
+  qq2server: true
+  info: true
+  command: true
+  bind: true
+  joinMessage: false
+  leaveMessage: false
+  serverStartMessage: true
+  serverStopMessage: true
+Config:
+  server2qq:
+    prefix:
+      enable: true
+      string: "[GR]"
+  qq2server:
+    prefix:
+      enable: true
+      string: "[GA]"
+  pay:
+    max: 20000
+    tax: 1
+    bank_max: 2000000
+    interest: 0.1
+  info:
+    text: "===玩家信息===\n玩家名%player_name%\n=============="
+  bind:
+    bindTokenLength: 15
+    allowRebind: false
+    allowUnbind: false
+    forceBind: true
+Message:
+  JoinServer: "玩家%player_name%加入了服务器！"
+  QuitServer: "玩家%player_name%退出了服务器！"
+  help: |-
+    可用命令列表：
+    .online-players 获取在线玩家列表
+    .bind <Playername> 申请绑定账号
+    .execute <command> 执行命令
+    .bank balance <name> 查看银行余额
+    .bank deposit <amount> 存入金币
+    .bank withdraw <amount> 取出金币
+    .info 玩家信息
+    .pay <player> <amount> 支付给玩家金币
+BindData:
+
+Index:
+
+BankData:
