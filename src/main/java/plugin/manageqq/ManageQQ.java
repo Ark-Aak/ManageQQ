@@ -180,26 +180,6 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
     public void onGroupMessageReceive(MiraiGroupMessageEvent e){
         String eMessage=e.getMessage();
         MiraiGroup group=MiraiBot.getBot(e.getBotID()).getGroup(e.getGroupID());
-        if(Config.getQQ2ServerEnable()){
-            if(eMessage.startsWith(Config.getQQ2ServerPrefix())){
-                if(PlayerData.DataHasPlayer(e.getSenderID())){
-                    Bukkit.broadcastMessage(PlayerData.DataPlayer(e.getSenderID()) + "：" + eMessage.substring(Config.getQQ2ServerPrefix().length()));
-                }
-                else{
-                    Bukkit.broadcastMessage(e.getSenderID() + "：" + eMessage.substring(Config.getQQ2ServerPrefix().length()));
-                }
-            }
-            else{
-                if(!Config.getQQ2ServerPrefixEnable()){
-                    if(PlayerData.DataHasPlayer(e.getSenderID())){
-                        Bukkit.broadcastMessage(PlayerData.DataPlayer(e.getSenderID()) + "：" + eMessage);
-                    }
-                    else{
-                        Bukkit.broadcastMessage(e.getSenderID() + "：" + eMessage);
-                    }
-                }
-            }
-        }
         String[] args=eMessage.split(" ");
         if(eMessage.equals(".help")){
             group.sendMessage(Config.getHelpMessage());
@@ -238,6 +218,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 NameToQQ.put(args[1], e.getSenderID());
                 group.sendMessage("申请成功\n请在游戏中使用 /mqq bind "+token+" 来完成绑定");
             }
+            return;
         }
         if(args[0].equals(".execute")){
             if(!Config.getCommandEnable()){
@@ -259,6 +240,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 new CommandDispatch(String.valueOf(cmd)).runTask(this);
                 group.sendMessage("已执行命令："+cmd);
             }
+            return;
         }
         if(eMessage.equals(".info")){
             if(!Config.getInfoEnable()){
@@ -271,6 +253,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             else{
                 group.sendMessage("你没有绑定账号！请绑定账号！");
             }
+            return;
         }
         if(args[0].equals(".pay")){
             if(!Config.getPayEnable()){
@@ -385,6 +368,27 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                     return;
                 }
                 group.sendMessage(args[2]+"的银行余额："+Bank.getBankBalance(Bukkit.getOfflinePlayer(args[2])));
+            }
+            return;
+        }
+        if(Config.getQQ2ServerEnable()){
+            if(eMessage.startsWith(Config.getQQ2ServerPrefix())){
+                if(PlayerData.DataHasPlayer(e.getSenderID())){
+                    Bukkit.broadcastMessage(PlayerData.DataPlayer(e.getSenderID()) + "：" + eMessage.substring(Config.getQQ2ServerPrefix().length()));
+                }
+                else{
+                    Bukkit.broadcastMessage(e.getSenderID() + "：" + eMessage.substring(Config.getQQ2ServerPrefix().length()));
+                }
+            }
+            else{
+                if(!Config.getQQ2ServerPrefixEnable()){
+                    if(PlayerData.DataHasPlayer(e.getSenderID())){
+                        Bukkit.broadcastMessage(PlayerData.DataPlayer(e.getSenderID()) + "：" + eMessage);
+                    }
+                    else{
+                        Bukkit.broadcastMessage(e.getSenderID() + "：" + eMessage);
+                    }
+                }
             }
         }
     }
