@@ -25,6 +25,8 @@ public class Config {
         cacheString.put("JoinMessage",ManageQQ.instance.getConfig().getString("Message.JoinServer"));
         cacheString.put("QuitMessage",ManageQQ.instance.getConfig().getString("Message.QuitServer"));
         cacheString.put("HelpMessage",ManageQQ.instance.getConfig().getString("Message.help"));
+        cacheString.put("JoinGroupMessage",ManageQQ.instance.getConfig().getString("Message.JoinGroup"));
+        cacheString.put("QuitGroupMessage",ManageQQ.instance.getConfig().getString("Message.QuitGroup"));
         cacheNum.put("TokenLength",ManageQQ.instance.getConfig().getLong("Config.bind.bindTokenLength"));
         cacheNum.put("PaymentMax",ManageQQ.instance.getConfig().getLong("Config.pay.max"));
         cacheNum.put("BankMax",ManageQQ.instance.getConfig().getLong("Config.pay.bank_max"));
@@ -54,6 +56,13 @@ public class Config {
         return ManageQQ.instance.getConfig().getBoolean("Action."+action);
     }
 
+    public static String getDatabaseInfo(String infoname){
+        if (!cacheString.containsKey("Database" + infoname)) {
+            cacheString.put("Database"+infoname,ManageQQ.instance.getConfig().getString("Database."+infoname));
+        }
+        return cacheString.get("Database"+infoname);
+    }
+
     public static String getServer2QQPrefix(){
         return cacheString.get("Server2QQPrefix");
     }
@@ -76,6 +85,14 @@ public class Config {
 
     public static String getHelpMessage(){
         return cacheString.get("HelpMessage");
+    }
+
+    public static String getJoinGroupMessage(){
+        return cacheString.get("JoinGroupMessage");
+    }
+
+    public static String getQuitGroupMessage(){
+        return cacheString.get("QuitGroupMessage");
     }
 
     public static long getTokenLength(){

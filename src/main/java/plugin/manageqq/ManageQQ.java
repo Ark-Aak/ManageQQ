@@ -3,7 +3,11 @@ package plugin.manageqq;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.dreamvoid.miraimc.api.MiraiBot;
 import me.dreamvoid.miraimc.api.bot.MiraiGroup;
+import me.dreamvoid.miraimc.bukkit.event.MiraiGroupMemberJoinEvent;
+import me.dreamvoid.miraimc.bukkit.event.group.member.MiraiMemberJoinEvent;
+import me.dreamvoid.miraimc.bukkit.event.group.member.MiraiMemberLeaveEvent;
 import me.dreamvoid.miraimc.bukkit.event.message.passive.MiraiGroupMessageEvent;
+import me.dreamvoid.miraimc.bukkit.event.message.recall.MiraiGroupMessageRecallEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -28,6 +32,7 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.*;
 import org.bukkit.scheduler.BukkitTask;
+import plugin.manageqq.database.MongoUtil;
 
 public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor {
     public static Logger log;
@@ -40,7 +45,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
     public static String getRandomString(long length){
         String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random=new Random();
-        StringBuffer sb=new StringBuffer();
+        StringBuilder sb=new StringBuilder();
         for(int i=0;i<length;i++){
             int number=random.nextInt(62);
             sb.append(str.charAt(number));
@@ -53,6 +58,16 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
         // Plugin startup logic
         instance=this;
         log=getLogger();
+        if(Boolean.parseBoolean(Config.getDatabaseInfo("Enabled"))){
+            if(!MongoUtil.Initialization()){
+                log.info("MongoDB初始化失败！");
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+            else{
+                log.info("MongoDB初始化成功！");
+            }
+        }
         Bukkit.getPluginManager().registerEvents(this, this);
         Objects.requireNonNull(Bukkit.getPluginCommand("mqq")).setExecutor(this);
         File f=new File("config.yml");
@@ -60,8 +75,8 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             saveDefaultConfig();
         }
         Config.writeCache();
-        Bukkit.getPluginCommand("mqq").setExecutor(this);
-        Bukkit.getPluginCommand("mqq").setTabCompleter(this);
+        Objects.requireNonNull(Bukkit.getPluginCommand("mqq")).setExecutor(this);
+        Objects.requireNonNull(Bukkit.getPluginCommand("mqq")).setTabCompleter(this);
         if (!setupEconomy()) {
             log.info("没找到Vault！");
             getServer().getPluginManager().disablePlugin(this);
@@ -156,7 +171,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent e){
         if(!PlayerData.playerHasBindData(e.getPlayer().getName())){
-            e.setJoinMessage(null);
+            e.joinMessage(null);
             KickThread.put(e.getPlayer(),new Kick(e.getPlayer(),"请绑定完成后再来！").runTaskLater(this,2400));
             e.getPlayer().sendMessage("你将在120秒后被踢出服务器，绑定即可停止计时。");
         }
@@ -168,12 +183,27 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLeave(PlayerQuitEvent e){
         if(!PlayerData.playerHasBindData(e.getPlayer().getName())){
-            e.setQuitMessage(null);
+            e.quitMessage(null);
             return;
         }
         if(Config.getQuitMessageEnable()){
             new SendMessage(PlaceholderAPI.setPlaceholders(e.getPlayer(),Config.getQuitMessage())).runTaskAsynchronously(this);
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onGroupMemberJoin(MiraiMemberJoinEvent e){
+
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onGroupMemberLeave(MiraiMemberLeaveEvent e){
+
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onGroupMessageRecall(MiraiGroupMessageRecallEvent e){
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -190,8 +220,8 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             message.append("当前服务器在线玩家列表：\n");
             Player[] players = new Player[Bukkit.getOnlinePlayers().size()];
             Bukkit.getOnlinePlayers().toArray(players);
-            for(int i=0;i<players.length;i++){
-                message.append(players[i].getName());
+            for (Player player : players) {
+                message.append(player.getName());
                 message.append("\n");
             }
             message.append("总共在线人数：");
@@ -229,11 +259,11 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 group.sendMessage("你不是服主认定的管理员！");
                 return;
             }
-            StringBuffer cmd=new StringBuffer();
+            StringBuilder cmd=new StringBuilder();
             if(args.length>=2){
                 for(int i=1;i<args.length;i++){
                     if(i<args.length){
-                        cmd.append(args[i]+" ");
+                        cmd.append(args[i]).append(" ");
                     }
                 }
                 cmd.deleteCharAt(cmd.length()-1);
@@ -279,27 +309,28 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                     group.sendMessage("请传入一个正数！");
                     return;
                 }
+                if(Config.getPaymentMax()<money){
+                    group.sendMessage("你的交易金额超过服主设置的上限！");
+                    return;
+                }
                 if(econ.getBalance(Bukkit.getOfflinePlayer(PlayerData.DataPlayer(e.getSenderID())))>=money){
                     if(PlayerData.playerHasBindData(args[1])){
                         econ.withdrawPlayer(Bukkit.getOfflinePlayer(PlayerData.DataPlayer(e.getSenderID())),money);
                         econ.depositPlayer(Bukkit.getOfflinePlayer(args[1]),money);
                         group.sendMessage("成功转账给"+args[1]+money+"金币！");
-                        return;
                     }
                     else{
                         group.sendMessage("该玩家尚未绑定QQ，提醒他绑定QQ吧！");
-                        return;
                     }
                 }
                 else{
                     group.sendMessage("余额不足！");
-                    return;
                 }
             }
             else{
                 group.sendMessage("你没有绑定账号！请绑定账号！");
-                return;
             }
+            return;
         }
         if(args[0].equals(".bank")){
             if(!Config.getPayEnable()){
@@ -327,6 +358,10 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 }
                 if(money<=0){
                     group.sendMessage("请输入一个正数！");
+                    return;
+                }
+                if(Bank.getBankBalance(Bukkit.getOfflinePlayer(PlayerData.DataPlayer(e.getSenderID())))+money>Config.getBankMax()){
+                    group.sendMessage("你转账后的银行余额超过服主设置的上限！");
                     return;
                 }
                 if(Bank.playerDeposit(Bukkit.getOfflinePlayer(PlayerData.DataPlayer(e.getSenderID())),money)){
