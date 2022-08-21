@@ -11,7 +11,7 @@ enabled-groups:               #启用机器人的群聊
   - 764136404
 enabled-bots:                 #启用的机器人
   - 3566096221
-admin:#认定的管理
+admin:                        #认定的管理
   - 1265723427
 Action:
   pay: true                   #经济模块
