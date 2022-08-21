@@ -45,8 +45,6 @@ public class Config {
         cacheBool.put("CaveEnable",getActionState("cave"));
         cacheBool.put("JoinMessageEnabled",getActionState("joinMessage"));
         cacheBool.put("QuitMessageEnabled",getActionState("leaveMessage"));
-        cacheBool.put("ServerStartMessageEnabled",getActionState("serverStartMessage"));
-        cacheBool.put("ServerStopMessageEnabled",getActionState("serverStopMessage"));
         cacheBool.put("ForceBindEnabled",ManageQQ.instance.getConfig().getBoolean("Config.bind.forceBind"));
         cacheList.put("EnabledGroups",ManageQQ.instance.getConfig().getLongList("enabled-groups"));
         cacheList.put("EnabledBots",ManageQQ.instance.getConfig().getLongList("enabled-bots"));
@@ -162,14 +160,6 @@ public class Config {
 
     public static boolean getQuitMessageEnable(){
         return cacheBool.get("QuitMessageEnabled");
-    }
-
-    public static boolean getServerStartMessageEnabled(){
-        return cacheBool.get("ServerStartMessageEnabled");
-    }
-
-    public static boolean getServerStopMessageEnabled(){
-        return cacheBool.get("ServerStopMessageEnabled");
     }
 
     public static boolean getForceBindEnabled(){

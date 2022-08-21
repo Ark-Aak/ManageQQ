@@ -13,8 +13,6 @@ Action:
   bind: true
   joinMessage: false
   leaveMessage: false
-  serverStartMessage: true
-  serverStopMessage: true
   joinGroupMessage: true
   leaveGroupMessage: true
   cave: true
