@@ -444,7 +444,6 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             }
             else if(args.length==3){
                 if(args[1].equals("put")){
-                    cave.addCave(argsCode[2],e.getSenderName(),e.getSenderID());
                     if(argsCode[2].contains("mirai:at")){
                         if(e.getSenderPermission()==0){
                             group.getMember(e.getSenderID()).setMute(3600);
@@ -455,6 +454,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                         }
                         return;
                     }
+                    cave.addCave(argsCode[2],e.getSenderName(),e.getSenderID());
                     group.sendMessage("添加成功！");
                 }
                 else{
