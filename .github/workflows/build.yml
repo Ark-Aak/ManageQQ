@@ -23,4 +23,4 @@ jobs:
         uses: actions/upload-artifact@v2.3.1
         with:
           name: "ManageQQ-Bukkit.jar"
-          path: /home/runner/work/ManageQQ/ManageQQ/target/ManageQQ-1.0.jar
+          path: /home/runner/work/ManageQQ/ManageQQ/target/ManageQQ-Bukkit.jar
