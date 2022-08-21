@@ -42,6 +42,7 @@ public class Config {
         cacheBool.put("InfoEnable",getActionState("info"));
         cacheBool.put("CommandEnable",getActionState("command"));
         cacheBool.put("BindEnable",getActionState("bind"));
+        cacheBool.put("CaveEnable",getActionState("cave"));
         cacheBool.put("JoinMessageEnabled",getActionState("joinMessage"));
         cacheBool.put("QuitMessageEnabled",getActionState("leaveMessage"));
         cacheBool.put("ServerStartMessageEnabled",getActionState("serverStartMessage"));
@@ -173,6 +174,10 @@ public class Config {
 
     public static boolean getForceBindEnabled(){
         return cacheBool.get("ForceBindEnabled");
+    }
+
+    public static boolean getCaveEnable(){
+        return cacheBool.get("CaveEnable");
     }
 
     public static List<Long> getEnabledGroups(){

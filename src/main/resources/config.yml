@@ -46,7 +46,6 @@ Database:
   Username: "user"
   Password: "password"
   Database: "db"
-  Prefix: "mqq_"
 Message:
   JoinServer: "玩家%player_name%加入了服务器！"
   QuitServer: "玩家%player_name%退出了服务器！"

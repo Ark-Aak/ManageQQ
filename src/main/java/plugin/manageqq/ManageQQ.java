@@ -8,6 +8,8 @@ import me.dreamvoid.miraimc.bukkit.event.group.member.MiraiMemberJoinEvent;
 import me.dreamvoid.miraimc.bukkit.event.group.member.MiraiMemberLeaveEvent;
 import me.dreamvoid.miraimc.bukkit.event.message.passive.MiraiGroupMessageEvent;
 import me.dreamvoid.miraimc.bukkit.event.message.recall.MiraiGroupMessageRecallEvent;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -59,7 +61,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
         instance=this;
         log=getLogger();
         if(Boolean.parseBoolean(Config.getDatabaseInfo("Enabled"))){
-            if(!MongoUtil.Initialization()){
+            if(!MongoUtil.Initialization("cave")){
                 log.info("MongoDB初始化失败！");
                 getServer().getPluginManager().disablePlugin(this);
                 return;
@@ -210,7 +212,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
     public void onGroupMessageReceive(MiraiGroupMessageEvent e){
         String eMessage=e.getMessage();
         MiraiGroup group=MiraiBot.getBot(e.getBotID()).getGroup(e.getGroupID());
-        String[] args=eMessage.split(" ");
+        String[] args=eMessage.split(" "),argsCode=e.getMessageToMiraiCode().split(" ");
         if(eMessage.equals(".help")){
             group.sendMessage(Config.getHelpMessage());
             return;
@@ -403,6 +405,35 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                     return;
                 }
                 group.sendMessage(args[2]+"的银行余额："+Bank.getBankBalance(Bukkit.getOfflinePlayer(args[2])));
+            }
+            return;
+        }
+        if(args[0].equals(".cave")){
+            if(!Config.getCaveEnable()){
+                group.sendMessage("服主未开启回声洞功能！");
+                return;
+            }
+            if(args.length==1){
+                try{
+                    Document cavec=cave.getCave();
+                    group.sendMessageMirai(cavec.getString("content")+"\n"+"——"+cavec.getString("sender"));
+                }
+                catch (Exception ex){
+                    group.sendMessage("回声洞中无内容！");
+                }
+                return;
+            }
+            else if(args.length==3){
+                if(args[1].equals("put")){
+                    cave.addCave(argsCode[2],e.getSenderName(),e.getSenderID());
+                    group.sendMessage("添加成功！");
+                }
+                else{
+                    group.sendMessage("参数错误！");
+                }
+            }
+            else{
+                group.sendMessage("参数错误！");
             }
             return;
         }
