@@ -429,7 +429,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 return;
             }
             if(!Boolean.parseBoolean(Config.getDatabaseInfo("Enabled"))){
-                group.sendMessage("服主未配置数据库！");
+                group.sendMessage("服主未配置MongoDB数据库！");
                 return;
             }
             if(args.length==1){
