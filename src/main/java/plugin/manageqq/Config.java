@@ -45,6 +45,8 @@ public class Config {
         cacheBool.put("CaveEnable",getActionState("cave"));
         cacheBool.put("JoinMessageEnabled",getActionState("joinMessage"));
         cacheBool.put("QuitMessageEnabled",getActionState("leaveMessage"));
+        cacheBool.put("JoinGroupMessageEnabled",getActionState("joinGroupMessage"));
+        cacheBool.put("QuitGroupMessageEnabled",getActionState("leaveGroupMessage"));
         cacheBool.put("ForceBindEnabled",ManageQQ.instance.getConfig().getBoolean("Config.bind.forceBind"));
         cacheList.put("EnabledGroups",ManageQQ.instance.getConfig().getLongList("enabled-groups"));
         cacheList.put("EnabledBots",ManageQQ.instance.getConfig().getLongList("enabled-bots"));

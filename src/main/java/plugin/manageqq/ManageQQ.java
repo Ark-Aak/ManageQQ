@@ -172,10 +172,12 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent e){
-        if(!PlayerData.playerHasBindData(e.getPlayer().getName())){
-            e.joinMessage(null);
-            KickThread.put(e.getPlayer(),new Kick(e.getPlayer(),"请绑定完成后再来！").runTaskLater(this,2400));
-            e.getPlayer().sendMessage("你将在120秒后被踢出服务器，绑定即可停止计时。");
+        if(Config.getForceBindEnabled()){
+            if(!PlayerData.playerHasBindData(e.getPlayer().getName())){
+                e.joinMessage(null);
+                KickThread.put(e.getPlayer(),new Kick(e.getPlayer(),"请绑定完成后再来！").runTaskLater(this,2400));
+                e.getPlayer().sendMessage("你将在120秒后被踢出服务器，绑定即可停止计时。");
+            }
         }
         if(Config.getJoinMessageEnable()){
             new SendMessage(PlaceholderAPI.setPlaceholders(e.getPlayer(),Config.getJoinMessage())).runTaskAsynchronously(this);
