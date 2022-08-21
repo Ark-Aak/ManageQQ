@@ -197,7 +197,10 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGroupMemberJoin(MiraiMemberJoinEvent e){
+        String message=Config.getJoinGroupMessage();
+        if(Config.getJoinGroupMessageEnable()){
 
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -212,8 +215,18 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGroupMessageReceive(MiraiGroupMessageEvent e){
+        boolean flag = false;
+        for(long i : Config.getEnabledBots()){
+            if(e.getBotID()==i){
+                flag=true;
+            }
+        }
+        if(!flag){
+            return;
+        }
         String eMessage=e.getMessage();
-        MiraiGroup group=MiraiBot.getBot(e.getBotID()).getGroup(e.getGroupID());
+        MiraiBot bot=MiraiBot.getBot(e.getBotID());
+        MiraiGroup group=bot.getGroup(e.getGroupID());
         String[] args=eMessage.split(" "),argsCode=e.getMessageToMiraiCode().split(" ");
         if(eMessage.equals(".help")){
             group.sendMessage(Config.getHelpMessage());
@@ -415,6 +428,10 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 group.sendMessage("服主未开启回声洞功能！");
                 return;
             }
+            if(!Boolean.parseBoolean(Config.getDatabaseInfo("Enabled"))){
+                group.sendMessage("服主未配置数据库！");
+                return;
+            }
             if(args.length==1){
                 try{
                     Document cavec=cave.getCave();
@@ -428,6 +445,16 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             else if(args.length==3){
                 if(args[1].equals("put")){
                     cave.addCave(argsCode[2],e.getSenderName(),e.getSenderID());
+                    if(argsCode[2].contains("mirai:at")){
+                        if(e.getSenderPermission()==0){
+                            group.getMember(e.getSenderID()).setMute(3600);
+                            group.sendMessage("禁止在回声洞中添加At信息！禁言1小时！");
+                        }
+                        else{
+                            group.sendMessage("禁止在回声洞中添加At信息！");
+                        }
+                        return;
+                    }
                     group.sendMessage("添加成功！");
                 }
                 else{

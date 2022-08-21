@@ -164,6 +164,14 @@ public class Config {
         return cacheBool.get("QuitMessageEnabled");
     }
 
+    public static boolean getJoinGroupMessageEnable(){
+        return cacheBool.get("JoinGroupMessageEnabled");
+    }
+
+    public static boolean getQuitGroupMessageEnable(){
+        return cacheBool.get("QuitGroupMessageEnabled");
+    }
+
     public static boolean getForceBindEnabled(){
         return cacheBool.get("ForceBindEnabled");
     }
