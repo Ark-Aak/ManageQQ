@@ -24,4 +24,11 @@ jobs:
         uses: actions/upload-artifact@v2.3.1
         if: success()
         with:
-          path: /home/runner/work/ManageQQ/ManageQQ/target/*.jar
+          name: ManageQQ.jar
+          path: /home/runner/work/ManageQQ/ManageQQ/target/ManageQQ-*.jar
+      - name: Upload a Build
+        uses: actions/upload-artifact@v2.3.1
+        if: success()
+        with:
+          name: original-ManageQQ.jar
+          path: /home/runner/work/ManageQQ/ManageQQ/target/original-ManageQQ-*.jar
