@@ -31,12 +31,15 @@ Config:
     bank_max: 2000000
     interest: 0.1
   info:
-    text: "===玩家信息===\n玩家名%player_name%\n=============="
+    text: |-
+      ====================
+      玩家名%player_name%
+      ====================
   bind:
     bindTokenLength: 15
     allowRebind: false
     allowUnbind: false
-    forceBind: true
+    forceBind: false
 Database:
   Enabled: false
   Url: "localhost"
