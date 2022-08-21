@@ -31,4 +31,8 @@ jobs:
         if: success()
         with:
           name: SourceCode.zip
-          path: /home/runner/work/ManageQQ
+          path: |
+            /home/runner/work/ManageQQ
+            !/home/runner/work/ManageQQ/.github
+            !/home/runner/work/ManageQQ/.git
+            !/home/runner/work/ManageQQ/target
