@@ -197,6 +197,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
         }
     }
 
+    /*
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGroupMemberJoin(MiraiMemberJoinEvent e){
         String message=Config.getJoinGroupMessage();
@@ -214,6 +215,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
     public void onGroupMessageRecall(MiraiGroupMessageRecallEvent e){
 
     }
+    */
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGroupMessageReceive(MiraiGroupMessageEvent e){
