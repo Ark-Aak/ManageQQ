@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,7 +42,8 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
     public static JavaPlugin instance;
     private HashMap<String,String> BindRecord = new HashMap<>();
     private HashMap<String,Long> NameToQQ = new HashMap<>();
-    private HashMap<Player, BukkitTask> KickThread = new HashMap<Player, org.bukkit.scheduler.BukkitTask>();
+    private HashMap<Player, BukkitTask> KickThread = new HashMap<>();
+    private HashMap<Long, Long> LastCave = new HashMap<>();
     public static Economy econ = null;
 
     public static String getRandomString(long length){
@@ -424,6 +426,19 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             return;
         }
         if(args[0].equals(".cave")){
+            if(LastCave.containsKey(e.getSenderID())){
+                long last=LastCave.get(e.getSenderID());
+                long now=System.currentTimeMillis();
+                long past=now-last;
+                if(past<=10000){
+                    if(e.getSenderPermission()==0){
+                        group.getMember(e.getSenderID()).setMute(7200);
+                    }
+                    group.sendMessage("请勿频繁使用回声洞！");
+                    return;
+                }
+            }
+            LastCave.put(e.getSenderID(),System.currentTimeMillis());
             if(!Config.getCaveEnable()){
                 group.sendMessage("服主未开启回声洞功能！");
                 return;
@@ -445,13 +460,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             else if(args.length==3){
                 if(args[1].equals("put")){
                     if(argsCode[2].contains("mirai:at")){
-                        if(e.getSenderPermission()==0){
-                            group.getMember(e.getSenderID()).setMute(3600);
-                            group.sendMessage("禁止在回声洞中添加At信息！禁言1小时！");
-                        }
-                        else{
-                            group.sendMessage("禁止在回声洞中添加At信息！");
-                        }
+                        group.sendMessage("禁止在回声洞中添加At信息！");
                         return;
                     }
                     cave.addCave(argsCode[2],e.getSenderName(),e.getSenderID());
