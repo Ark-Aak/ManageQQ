@@ -432,7 +432,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 long last=LastCave.get(e.getSenderID());
                 long now=System.currentTimeMillis();
                 long past=now-last;
-                if(past<=10000){
+                if(past<=5000){
                     if(e.getSenderPermission()==0){
                         group.getMember(e.getSenderID()).setMute(7200);
                     }
