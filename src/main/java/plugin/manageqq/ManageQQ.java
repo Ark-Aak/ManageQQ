@@ -1,5 +1,7 @@
 package plugin.manageqq;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.dreamvoid.miraimc.api.MiraiBot;
 import me.dreamvoid.miraimc.api.bot.MiraiGroup;
@@ -35,6 +37,7 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.*;
 import org.bukkit.scheduler.BukkitTask;
+import org.json.simple.parser.JSONParser;
 import plugin.manageqq.database.MongoUtil;
 
 public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor {
@@ -235,6 +238,16 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
         if(eMessage.equals(".help")){
             group.sendMessage(Config.getHelpMessage());
             return;
+        }
+        if(eMessage.equals(".hitokoto")){
+            //Hitokoto一言
+            JSONObject hitokoto = JSON.parseObject(Network.sendGet("https://v1.hitokoto.cn","c=a&c=b&c=c&c=f"));
+            String content,from;
+            int id;
+            content = hitokoto.getString("hitokoto");
+            from = hitokoto.getString("from");
+            id = hitokoto.getIntValue("id");
+            group.sendMessage(String.valueOf(content + "\n" + "——" + from + "(" + id + ")"));
         }
         if(eMessage.equals(".online-players")) {
             StringBuilder message=new StringBuilder();
