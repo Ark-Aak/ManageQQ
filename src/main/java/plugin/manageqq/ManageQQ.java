@@ -446,9 +446,6 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 long now=System.currentTimeMillis();
                 long past=now-last;
                 if(past<=5000){
-                    if(e.getSenderPermission()==0){
-                        group.getMember(e.getSenderID()).setMute(7200);
-                    }
                     group.sendMessage("请勿频繁使用回声洞！");
                     return;
                 }
@@ -476,6 +473,10 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 if(args[1].equals("put")){
                     if(argsCode[2].contains("mirai:at")){
                         group.sendMessage("禁止在回声洞中添加At信息！");
+                        return;
+                    }
+                    if(argsCode[2].contains("mirai:image")){
+                        group.sendMessage("禁止在回声洞中添加图片信息！");
                         return;
                     }
                     cave.addCave(argsCode[2],e.getSenderName(),e.getSenderID());
