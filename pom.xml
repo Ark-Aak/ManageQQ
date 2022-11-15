@@ -84,9 +84,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.1.23</version>
+            <version>1.2.31_noneautotype</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>

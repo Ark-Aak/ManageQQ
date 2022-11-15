@@ -47,6 +47,12 @@ Database:
   Username: "user"
   Password: "password"
   Database: "db"
+  EnabledRedis: false
+  UrlRedis: "localhost"
+  PortRedis: 6379
+  PasswordRedis: "None"
+  DatabaseRedis: "db"
+  ConnectionCountRedis: 15
 Message:
   JoinServer: "玩家%player_name%加入了服务器！"
   QuitServer: "玩家%player_name%退出了服务器！"
