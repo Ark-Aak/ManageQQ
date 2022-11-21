@@ -301,7 +301,7 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 group.sendMessage("参数错误！");
             }
             else {
-                if((PlayerData.DataHasPlayer(e.getSenderID())|| PlayerData.playerHasBindData(args[1])&&(!Config.getAllowRebind()))){
+                if(((PlayerData.DataHasPlayer(e.getSenderID())|| PlayerData.playerHasBindData(args[1]))&&(!Config.getAllowRebind()))){
                     group.sendMessage("你绑定过账号了！并且服主未开启重绑定！");
                     return;
                 }
