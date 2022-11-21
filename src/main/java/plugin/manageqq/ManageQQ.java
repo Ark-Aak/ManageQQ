@@ -102,19 +102,6 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             return;
         }
         log.info("Plugin Enabled.");
-        for(long i:Config.getEnabledBots()){
-            MiraiBot bot=MiraiBot.getBot(i);
-            for(long j:Config.getEnabledGroups()){
-                for(long k:bot.getGroupList()){
-                    if(j==k){
-                        int Perm = bot.getGroup(k).getBotPermission();
-                        if(Perm==0){
-                            bot.getGroup(k).sendMessage("配置文件中的机器人" + String.valueOf(i) + "在群" + String.valueOf(k) + "中为普通成员，有些功能可能出现故障甚至报错！");
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @Override
