@@ -39,6 +39,7 @@ import net.milkbowl.vault.economy.*;
 import org.bukkit.scheduler.BukkitTask;
 import org.json.simple.parser.JSONParser;
 import plugin.manageqq.database.MongoUtil;
+import plugin.manageqq.database.RedisUtil;
 
 public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor {
     public static Logger log;
@@ -75,6 +76,17 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
                 log.info("MongoDB初始化成功！");
             }
         }
+        if(Boolean.parseBoolean(Config.getDatabaseInfoRedis("Enabled"))){
+            RedisUtil.init();
+            if(RedisUtil.getdb().ping().equals("PONG")){
+                log.info("Redis初始化成功！");
+            }
+            else{
+                log.info("Redis初始化失败！");
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+        }
         Bukkit.getPluginManager().registerEvents(this, this);
         Objects.requireNonNull(Bukkit.getPluginCommand("mqq")).setExecutor(this);
         File f=new File("config.yml");
@@ -90,6 +102,19 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             return;
         }
         log.info("Plugin Enabled.");
+        for(long i:Config.getEnabledBots()){
+            MiraiBot bot=MiraiBot.getBot(i);
+            for(long j:Config.getEnabledGroups()){
+                for(long k:bot.getGroupList()){
+                    if(j==k){
+                        int Perm = bot.getGroup(k).getBotPermission();
+                        if(Perm==0){
+                            bot.getGroup(k).sendMessage("配置文件中的机器人" + String.valueOf(i) + "在群" + String.valueOf(k) + "中为普通成员，有些功能可能出现故障甚至报错！");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -200,25 +225,25 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
         }
     }
 
-    /*
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGroupMemberJoin(MiraiMemberJoinEvent e){
         String message=Config.getJoinGroupMessage();
+        MiraiBot bot=MiraiBot.getBot(e.getBotID());
+        MiraiGroup group=bot.getGroup(e.getGroupID());
         if(Config.getJoinGroupMessageEnable()){
-
+            group.sendMessage(message);
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGroupMemberLeave(MiraiMemberLeaveEvent e){
-
+        String message=Config.getQuitGroupMessage();
+        MiraiBot bot=MiraiBot.getBot(e.getBotID());
+        MiraiGroup group=bot.getGroup(e.getGroupID());
+        if(Config.getQuitGroupMessageEnable()){
+            group.sendMessage(message);
+        }
     }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onGroupMessageRecall(MiraiGroupMessageRecallEvent e){
-
-    }
-    */
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onGroupMessageReceive(MiraiGroupMessageEvent e){

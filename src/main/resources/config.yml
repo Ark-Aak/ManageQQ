@@ -58,6 +58,8 @@ Message:
   QuitServer: "玩家%player_name%退出了服务器！"
   JoinGroup: "欢迎新人{at}加入EOS服务器！"
   QuitGroup: "{nick}退出了群聊！"
+  AutoReply:
+
   help: |-
     可用命令列表：
     .online-players |获取在线玩家列表
