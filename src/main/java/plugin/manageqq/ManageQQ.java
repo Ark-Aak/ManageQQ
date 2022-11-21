@@ -102,19 +102,6 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             return;
         }
         log.info("Plugin Enabled.");
-        for(long i:Config.getEnabledBots()){
-            MiraiBot bot=MiraiBot.getBot(i);
-            for(long j:Config.getEnabledGroups()){
-                for(long k:bot.getGroupList()){
-                    if(j==k){
-                        int Perm = bot.getGroup(k).getBotPermission();
-                        if(Perm==0){
-                            bot.getGroup(k).sendMessage("配置文件中的机器人" + String.valueOf(i) + "在群" + String.valueOf(k) + "中为普通成员，有些功能可能出现故障甚至报错！");
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -260,6 +247,22 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
         MiraiBot bot=MiraiBot.getBot(e.getBotID());
         MiraiGroup group=bot.getGroup(e.getGroupID());
         String[] args=eMessage.split(" "),argsCode=e.getMessageToMiraiCode().split(" ");
+        if(eMessage.equals(".check-perm")){
+            if(!PlayerData.QQIDisAdmin(e.getSenderID())){
+                group.sendMessage("你不是服主认定的管理员！");
+                return;
+            }
+            for(long j:Config.getEnabledGroups()){
+                for(long k:bot.getGroupList()){
+                    if(j==k){
+                        int Perm = bot.getGroup(k).getBotPermission();
+                        if(Perm==0){
+                            bot.getGroup(k).sendMessage("机器人在群中为普通成员，有些功能可能出现故障甚至报错！");
+                        }
+                    }
+                }
+            }
+        }
         if(eMessage.equals(".help")){
             group.sendMessage(Config.getHelpMessage());
             return;
