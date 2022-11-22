@@ -19,7 +19,7 @@ public class RedisUtil {
         config.setMaxIdle(ConnectionCount);
         config.setMaxTotal(ConnectionCount);
         if(Config.getDatabaseInfoRedis("Password").equals("None")){
-            JedisPool pool = new JedisPool(
+            pool = new JedisPool(
                     config,
                     Config.getDatabaseInfoRedis("Url"),
                     Integer.parseInt(Config.getDatabaseInfoRedis("Port")),
@@ -27,7 +27,7 @@ public class RedisUtil {
             );
         }
         else{
-            JedisPool pool = new JedisPool(
+            pool = new JedisPool(
                     config,
                     Config.getDatabaseInfoRedis("Url"),
                     Integer.parseInt(Config.getDatabaseInfoRedis("Port")),
