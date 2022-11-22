@@ -10,8 +10,10 @@ import java.util.Objects;
 public class RedisUtil {
 
     private static JedisPool pool;
+    private static boolean isInit;
 
     public static void init(){
+        isInit=true;
         JedisPoolConfig config = new JedisPoolConfig();
         int ConnectionCount = Integer.parseInt(Config.getDatabaseInfoRedis("ConnectionCount"));
         config.setMaxIdle(ConnectionCount);
@@ -36,6 +38,9 @@ public class RedisUtil {
     }
 
     public static Jedis getdb(){
+        if(!isInit){
+            init();
+        }
         return pool.getResource();
     }
 

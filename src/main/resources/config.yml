@@ -51,7 +51,6 @@ Database:
   UrlRedis: "localhost"
   PortRedis: 6379
   PasswordRedis: "None"
-  DatabaseRedis: "db"
   ConnectionCountRedis: 15
 Message:
   JoinServer: "玩家%player_name%加入了服务器！"
