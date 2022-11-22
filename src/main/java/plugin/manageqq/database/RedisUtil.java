@@ -9,10 +9,10 @@ import java.util.Objects;
 
 public class RedisUtil {
 
-    private static JedisPool pool;
-    private static boolean isInit;
+    private JedisPool pool;
+    private boolean isInit;
 
-    public static void init(){
+    public void init(){
         isInit=true;
         JedisPoolConfig config = new JedisPoolConfig();
         int ConnectionCount = Integer.parseInt(Config.getDatabaseInfoRedis("ConnectionCount"));
@@ -37,58 +37,58 @@ public class RedisUtil {
         }
     }
 
-    public static Jedis getdb(){
+    public Jedis getdb(){
         if(!isInit){
             init();
         }
         return pool.getResource();
     }
 
-    public static void set(String key,String val){
+    public void set(String key,String val){
         getdb().set(key, val);
     }
 
-    public static void set(long key,long val){
+    public void set(long key,long val){
         getdb().set(String.valueOf(key), String.valueOf(val));
     }
 
-    public static void set(String key,long val){
+    public void set(String key,long val){
         getdb().set(key, String.valueOf(val));
     }
 
-    public static void set(long key,String val){
+    public void set(long key,String val){
         getdb().set(String.valueOf(key), val);
     }
 
-    public static void set(String key,String val,long second){
+    public void set(String key,String val,long second){
         getdb().setex(key, second, val);
     }
 
-    public static void set(long key,long val,long second){
+    public void set(long key,long val,long second){
         getdb().setex(String.valueOf(key), second, String.valueOf(val));
     }
 
-    public static void set(String key,long val,long second){
+    public void set(String key,long val,long second){
         getdb().setex(key, second, String.valueOf(val));
     }
 
-    public static void set(long key,String val,long second){
+    public void set(long key,String val,long second){
         getdb().setex(String.valueOf(key), second, val);
     }
 
-    public static String get(String key){
+    public String get(String key){
         return getdb().get(key);
     }
 
-    public static String get(long key){
+    public String get(long key){
         return getdb().get(String.valueOf(key));
     }
 
-    public static long getLong(String key){
+    public long getLong(String key){
         return Long.parseLong(getdb().get(key));
     }
 
-    public static long getLong(long key){
+    public long getLong(long key){
         return Long.parseLong(getdb().get(String.valueOf(key)));
     }
 }

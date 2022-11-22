@@ -43,6 +43,8 @@ import plugin.manageqq.database.RedisUtil;
 
 public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor {
     public static Logger log;
+
+    public RedisUtil redis=new RedisUtil();
     public static JavaPlugin instance;
     private HashMap<String,String> BindRecord = new HashMap<>();
     private HashMap<String,Long> NameToQQ = new HashMap<>();
@@ -77,8 +79,8 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             }
         }
         if(Boolean.parseBoolean(Config.getDatabaseInfoRedis("Enabled"))){
-            RedisUtil.init();
-            if(RedisUtil.getdb().ping().equals("PONG")){
+            redis.init();
+            if(redis.getdb().ping().equals("PONG")){
                 log.info("Redis初始化成功！");
             }
             else{
