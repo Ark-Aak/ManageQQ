@@ -56,11 +56,28 @@ Database:                     #MongoDB数据库信息
   Username: "user"            #用户名
   Password: "password"        #密码
   Database: "db"              #数据库名称
+  EnabledRedis: false         #是否开启Redis数据库(用于刷屏检查缓存聊天消息，未完成)
+  UrlRedis: "localhost"       #Redis地址
+  PortRedis: 6379             #Redis端口
+  PasswordRedis: "None"       #Redis密码，None为没有
+  ConnectionCountRedis: 15    #连接池数量
 Message:
   JoinServer: "玩家%player_name%加入了服务器！"
   QuitServer: "玩家%player_name%退出了服务器！"
   JoinGroup: "欢迎新人{at}加入EOS服务器！"
   QuitGroup: "{nick}退出了群聊！"
+  AutoReply:                  #关键词自动回复(未完成)
+    Count: 2
+    1:
+      Content: "谢谢"
+      Reply: "不用谢"
+      Mute: 0
+      Recall: false
+    2:
+      Content: "RNM"
+      Reply: "违禁词撤回"
+      Mute: 600
+      Recall: true
   help: |-                    #执行.help时输出的内容
     可用命令列表：
     .online-players |获取在线玩家列表

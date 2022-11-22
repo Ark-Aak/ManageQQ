@@ -58,7 +58,17 @@ Message:
   JoinGroup: "欢迎新人{at}加入EOS服务器！"
   QuitGroup: "{nick}退出了群聊！"
   AutoReply:
-
+    Count: 2
+    1:
+      Content: "谢谢"
+      Reply: "不用谢"
+      Mute: 0
+      Recall: false
+    2:
+      Content: "RNM"
+      Reply: "违禁词撤回"
+      Mute: 600
+      Recall: true
   help: |-
     可用命令列表：
     .online-players |获取在线玩家列表
