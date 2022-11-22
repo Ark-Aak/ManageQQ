@@ -79,6 +79,9 @@ Message:
     .bank withdraw 金额 |取出金币
     .info |玩家信息
     .pay 玩家名 金额 |支付给玩家金币
+    .hitokoto |获取一言
+    .cave |获取一条随机回声洞
+    .cave put 内容 |投稿回声洞
 BindData:
 
 Index:
