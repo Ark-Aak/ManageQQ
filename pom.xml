@@ -6,7 +6,7 @@
 
     <groupId>Plugin</groupId>
     <artifactId>ManageQQ</artifactId>
-    <version>1.0-build.3</version>
+    <version>1.0-build.4</version>
     <packaging>jar</packaging>
 
     <name>ManageQQ</name>
@@ -83,11 +83,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>4.3.1</version>
-        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

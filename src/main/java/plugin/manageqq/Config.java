@@ -64,13 +64,6 @@ public class Config {
         return cacheString.get("Database"+infoname);
     }
 
-    public static String getDatabaseInfoRedis(String infoname){
-        if (!cacheString.containsKey("Database" + infoname + "Redis")) {
-            cacheString.put("Database"+infoname+"Redis",ManageQQ.instance.getConfig().getString("Database."+infoname+"Redis"));
-        }
-        return cacheString.get("Database"+infoname+"Redis");
-    }
-
     public static String getServer2QQPrefix(){
         return cacheString.get("Server2QQPrefix");
     }

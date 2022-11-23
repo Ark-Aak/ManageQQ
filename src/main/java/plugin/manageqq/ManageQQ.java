@@ -5,19 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.dreamvoid.miraimc.api.MiraiBot;
 import me.dreamvoid.miraimc.api.bot.MiraiGroup;
-import me.dreamvoid.miraimc.bukkit.event.MiraiGroupMemberJoinEvent;
 import me.dreamvoid.miraimc.bukkit.event.group.member.MiraiMemberJoinEvent;
 import me.dreamvoid.miraimc.bukkit.event.group.member.MiraiMemberLeaveEvent;
 import me.dreamvoid.miraimc.bukkit.event.message.passive.MiraiGroupMessageEvent;
-import me.dreamvoid.miraimc.bukkit.event.message.recall.MiraiGroupMessageRecallEvent;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.CaveSpider;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,14 +33,10 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.economy.*;
 import org.bukkit.scheduler.BukkitTask;
-import org.json.simple.parser.JSONParser;
 import plugin.manageqq.database.MongoUtil;
-import plugin.manageqq.database.RedisUtil;
 
 public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor {
     public static Logger log;
-
-    public RedisUtil redis=new RedisUtil();
     public static JavaPlugin instance;
     private HashMap<String,String> BindRecord = new HashMap<>();
     private HashMap<String,Long> NameToQQ = new HashMap<>();
@@ -76,17 +68,6 @@ public final class ManageQQ extends JavaPlugin implements Listener, TabExecutor 
             }
             else{
                 log.info("MongoDB初始化成功！");
-            }
-        }
-        if(Boolean.parseBoolean(Config.getDatabaseInfoRedis("Enabled"))){
-            redis.init();
-            if(redis.getdb().ping().equals("PONG")){
-                log.info("Redis初始化成功！");
-            }
-            else{
-                log.info("Redis初始化失败！");
-                getServer().getPluginManager().disablePlugin(this);
-                return;
             }
         }
         Bukkit.getPluginManager().registerEvents(this, this);
