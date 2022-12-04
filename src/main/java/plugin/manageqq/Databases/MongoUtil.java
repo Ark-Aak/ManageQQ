@@ -1,24 +1,20 @@
-package plugin.manageqq.database;
+package plugin.manageqq.Databases;
 
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import plugin.manageqq.Config;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MongoUtil {
     private static MongoDatabase db;
     private static MongoClient client;
 
-    public static boolean Initialization(String ddb){
+    public static boolean Initialization(String constr,String Db){
         try{
-            client = MongoClients.create("mongodb://"+ Config.getDatabaseInfo("Username")+ ":"+Config.getDatabaseInfo("Password")+ "@"+ Config.getDatabaseInfo("Url")+ ":"+ Config.getDatabaseInfo("Port")+ "/"+ ddb);
-            db = client.getDatabase(Config.getDatabaseInfo("Database"));
+            client = MongoClients.create(constr);
+            db = client.getDatabase(Db);
             return true;
         }
         catch (Exception e){
@@ -26,13 +22,13 @@ public class MongoUtil {
         }
     }
 
-    public static boolean createCollection(String name){
+    public static void createCollection(String name){
         try{
             db.createCollection(name);
-            return true;
-        }
-        catch (Exception e){
-            return false;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+            //反正我是不信你创建集合会报错的
+            //咱也没办法对吧
         }
     }
 

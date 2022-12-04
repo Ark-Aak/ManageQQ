@@ -1,15 +1,15 @@
-package plugin.manageqq;
+package plugin.manageqq.Cave;
 
 import org.bson.Document;
-import org.bson.conversions.Bson;
-import plugin.manageqq.database.MongoUtil;
+import plugin.manageqq.Databases.MongoUtil;
+import plugin.manageqq.ManageQQ;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
 
-public class cave {
+public class CaveUtil {
     public static void addCave(String content,String user,long id){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         long currentTime = System.currentTimeMillis();

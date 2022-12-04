@@ -1,45 +1,3 @@
-enabled-groups:
-  - 764136404
-enabled-bots:
-  - 3566096221
-admin:
-  - 1265723427
-Action:
-  pay: true
-  server2qq: true
-  qq2server: true
-  info: true
-  command: true
-  bind: true
-  joinMessage: false
-  leaveMessage: false
-  joinGroupMessage: true
-  leaveGroupMessage: true
-  cave: true
-Config:
-  server2qq:
-    prefix:
-      enable: true
-      string: "[GR]"
-  qq2server:
-    prefix:
-      enable: true
-      string: "[GA]"
-  pay:
-    max: 20000
-    tax: 1
-    bank_max: 2000000
-    interest: 0.1
-  info:
-    text: |-
-      ====================
-      玩家名%player_name%
-      ====================
-  bind:
-    bindTokenLength: 15
-    allowRebind: false
-    allowUnbind: false
-    forceBind: false
 Database:
   Enabled: false
   Url: "localhost"
@@ -47,38 +5,11 @@ Database:
   Username: "user"
   Password: "password"
   Database: "db"
-Message:
-  JoinServer: "玩家%player_name%加入了服务器！"
-  QuitServer: "玩家%player_name%退出了服务器！"
-  JoinGroup: "欢迎新人{at}加入EOS服务器！"
-  QuitGroup: "{nick}退出了群聊！"
-  AutoReply:
-    Count: 2
-    1:
-      Content: "谢谢"
-      Reply: "不用谢"
-      Mute: 0
-      Recall: false
-    2:
-      Content: "RNM"
-      Reply: "违禁词撤回"
-      Mute: 600
-      Recall: true
-  help: |-
-    可用命令列表：
-    .online-players |获取在线玩家列表
-    .bind 玩家名 |申请绑定账号
-    .execute 指令 |执行命令
-    .bank balance 玩家名 |查看银行余额
-    .bank deposit 金额 |存入金币
-    .bank withdraw 金额 |取出金币
-    .info |玩家信息
-    .pay 玩家名 金额 |支付给玩家金币
-    .hitokoto |获取一言
-    .cave |获取一条随机回声洞
-    .cave put 内容 |投稿回声洞
-BindData:
-
-Index:
-
-BankData:
+MCL:
+  Url: "localhost"
+  Port: 8080
+  verifyKey: "fill your key here"
+Bot:
+  BotId: 114514
+  Groups:
+    - 1919810

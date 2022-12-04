@@ -94,18 +94,6 @@
             <version>4.7.1</version>
         </dependency>
         <dependency>
-            <groupId>com.github.MilkBowl</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.dreamvoid</groupId>
-            <artifactId>MiraiMC-Integration</artifactId>
-            <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>

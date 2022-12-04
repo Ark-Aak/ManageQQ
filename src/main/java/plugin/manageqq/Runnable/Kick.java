@@ -1,4 +1,4 @@
-package plugin.manageqq;
+package plugin.manageqq.Runnable;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

@@ -4,7 +4,6 @@ main: plugin.manageqq.ManageQQ
 api-version: 1.16
 prefix: ManageQQ
 load: POSTWORLD
-depend: [ MiraiMC , PlaceholderAPI , Vault ]
 authors: [ Anschluss_zeit ]
 description: ManageQQ
 commands:
