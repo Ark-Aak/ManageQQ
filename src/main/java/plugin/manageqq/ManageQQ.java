@@ -1,6 +1,7 @@
 package plugin.manageqq;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -13,7 +14,9 @@ import plugin.manageqq.Listener.PlayerChatHandler;
 import plugin.manageqq.Exceptions.MiraiBotDoesNotExistException;
 import plugin.manageqq.Exceptions.MiraiUnknownException;
 import plugin.manageqq.Mirai.MiraiBotUtil;
+import plugin.manageqq.Mirai.MiraiNetworkUtil;
 import plugin.manageqq.Mirai.MiraiSession;
+import plugin.manageqq.Mirai.MiraiUtil;
 
 public final class ManageQQ extends JavaPlugin{
 
@@ -44,7 +47,7 @@ public final class ManageQQ extends JavaPlugin{
         if(!f.exists()){
             saveDefaultConfig();
         }
-        MiraiBotUtil.init();
+        MiraiBotUtil.init(false);
         log.info("sessionKey=" + session.sessionKey);
         log.info("注册事件...");
         Bukkit.getPluginManager().registerEvents(new PlayerChatHandler(), this);

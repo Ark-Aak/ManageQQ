@@ -1,5 +1,7 @@
 package plugin.manageqq.Network;
 
+import plugin.manageqq.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,6 +18,7 @@ public class NetworkUtil {
      * @return URL 所代表远程资源的响应结果
      */
     public static NetworkResponse sendGet(String url, String param) {
+        Logger.debug("Send GET to " + url + "?" + param);
         StringBuilder result = new StringBuilder();
         BufferedReader in = null;
         try {
@@ -53,6 +56,8 @@ public class NetworkUtil {
      * @return 所代表远程资源的响应结果
      */
     public static NetworkResponse sendPost(String url, String param) {
+        Logger.debug("Send POST to " + url);
+        Logger.debug("Data: " + param);
         PrintWriter out = null;
         BufferedReader in = null;
         StringBuilder result = new StringBuilder();

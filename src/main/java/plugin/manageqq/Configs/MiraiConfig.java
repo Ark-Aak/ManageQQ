@@ -33,4 +33,8 @@ public class MiraiConfig {
     public static String getMiraiApi(String api){
         return getMiraiFullUrl() + api;
     }
+
+    public static boolean getDebug(){
+        return ManageQQ.instance.getConfig().getBoolean("Bot.Debug");
+    }
 }

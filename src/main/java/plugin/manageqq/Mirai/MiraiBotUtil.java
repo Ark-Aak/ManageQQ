@@ -5,6 +5,7 @@ import jdk.jpackage.internal.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import plugin.manageqq.Configs.MiraiConfig;
+import plugin.manageqq.Exceptions.MiraiBotDoesNotExistException;
 import plugin.manageqq.Exceptions.MiraiBotOfflineException;
 import plugin.manageqq.Exceptions.MiraiUnknownException;
 import plugin.manageqq.Exceptions.MiraiVerifyKeyInvalidException;
@@ -24,7 +25,16 @@ public class MiraiBotUtil {
     /**
      * 初始化MiraiBot模块
      */
-    public static void init(){
+    public static void init(boolean isReload) {
+        if(isReload){
+            try {
+                session.releaseSession();
+            } catch (MiraiBotDoesNotExistException e) {
+                Logger.info("session已经被自动销毁...跳过");
+            } catch (MiraiUnknownException e) {
+                e.printStackTrace();
+            }
+        }
         Logger.info("MiraiBot模块正在初始化...");
         initMark=true;
         Logger.info("获取登陆列表...");
@@ -55,6 +65,7 @@ public class MiraiBotUtil {
             Logger.info("将session与QQ" + MiraiConfig.getBotId() + "绑定...");
             session.bindBotId(MiraiConfig.getBotId());
             Logger.info(ChatColor.GOLD + "绑定成功，机器人Id="+MiraiConfig.getBotId());
+            Logger.info("sessionKey=" + session.sessionKey);
         } catch (MiraiVerifyKeyInvalidException e) {
             Logger.error("verifyKey无效！");
             Logger.error("开始禁用插件...");
@@ -68,6 +79,20 @@ public class MiraiBotUtil {
             Logger.error("开始禁用插件...");
             Bukkit.getPluginManager().disablePlugin(ManageQQ.instance);
         }
+        try {
+            int messageCount = MiraiUtil.getQueueMessageCount(session);
+            if(messageCount != 0){
+                Logger.info(ChatColor.GREEN + "检测到未读消息" + messageCount + "条！");
+                Logger.info(ChatColor.GREEN + "正在将未读消息移出消息队列...");
+                MiraiUtil.getQueueMessage(session,messageCount);
+                Logger.info(ChatColor.GREEN + "已经将" + messageCount + "条消息移出消息队列！");
+            }
+            else{
+                Logger.info(ChatColor.GREEN + "未检测到未读消息，跳过...");
+            }
+        } catch (MiraiUnknownException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -78,7 +103,7 @@ public class MiraiBotUtil {
      */
     public static boolean isBotLogin(long botId){
         if(!initMark){
-            init();
+            init(false);
         }
         for (long loginId : loginBot) {
             if (loginId == botId) {
@@ -95,7 +120,7 @@ public class MiraiBotUtil {
      */
     public static List<Long> getLoginBots(){
         if(!initMark){
-            init();
+            init(false);
         }
         return loginBot;
     }
