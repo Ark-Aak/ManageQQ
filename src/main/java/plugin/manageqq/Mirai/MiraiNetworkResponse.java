@@ -1,7 +1,6 @@
 package plugin.manageqq.Mirai;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
 import plugin.manageqq.Network.NetworkResponse;
 
 public class MiraiNetworkResponse extends NetworkResponse {
@@ -33,7 +32,7 @@ public class MiraiNetworkResponse extends NetworkResponse {
      *
      * @return Response中的data字段
      */
-    public JSONObject getData(){
+    public Object getData(){
         return getValueJson("data");
     }
 

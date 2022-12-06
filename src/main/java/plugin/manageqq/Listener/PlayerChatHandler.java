@@ -1,4 +1,4 @@
-package plugin.manageqq.Events;
+package plugin.manageqq.Listener;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.event.EventHandler;

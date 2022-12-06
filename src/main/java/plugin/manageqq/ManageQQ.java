@@ -1,32 +1,19 @@
 package plugin.manageqq;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import org.bukkit.scheduler.BukkitTask;
 import plugin.manageqq.Commands.mqqExecutor;
-import plugin.manageqq.Configs.MiraiConfig;
-import plugin.manageqq.Databases.MongoUtil;
-import plugin.manageqq.Events.PlayerChatHandler;
-import plugin.manageqq.Exceptions.MiraiBotOfflineException;
+import plugin.manageqq.Listener.PlayerChatHandler;
+import plugin.manageqq.Exceptions.MiraiBotDoesNotExistException;
 import plugin.manageqq.Exceptions.MiraiUnknownException;
-import plugin.manageqq.Exceptions.MiraiVerifyKeyInvalidException;
+import plugin.manageqq.Mirai.MiraiBotUtil;
 import plugin.manageqq.Mirai.MiraiSession;
-import plugin.manageqq.Mirai.MiraiUtil;
 
 public final class ManageQQ extends JavaPlugin{
 
@@ -57,12 +44,8 @@ public final class ManageQQ extends JavaPlugin{
         if(!f.exists()){
             saveDefaultConfig();
         }
-        try {
-            session = new MiraiSession(MiraiUtil.getSession(MiraiConfig.getVerifyKey()));
-            session.bindBotId(1265723427L);
-        } catch (MiraiVerifyKeyInvalidException | MiraiUnknownException | MiraiBotOfflineException e) {
-            e.printStackTrace();
-        }
+        MiraiBotUtil.init();
+        log.info("sessionKey=" + session.sessionKey);
         log.info("注册事件...");
         Bukkit.getPluginManager().registerEvents(new PlayerChatHandler(), this);
         log.info("注册命令...");
@@ -75,6 +58,14 @@ public final class ManageQQ extends JavaPlugin{
     public void onDisable() {
         log.info("正在停止线程...");
         Bukkit.getScheduler().cancelTasks(this);
+        log.info("释放sessionKey...");
+        try {
+            session.releaseSession();
+        } catch (MiraiBotDoesNotExistException e) {
+            log.info("session已经被自动销毁...跳过");
+        } catch (MiraiUnknownException e) {
+            e.printStackTrace();
+        }
         log.info("插件已禁用！感谢您的使用！");
     }
 }

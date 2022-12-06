@@ -2,6 +2,8 @@ package plugin.manageqq.Configs;
 
 import plugin.manageqq.ManageQQ;
 
+import java.util.List;
+
 public class MiraiConfig {
 
     public static String getMiraiUrl(){
@@ -18,5 +20,17 @@ public class MiraiConfig {
 
     public static String getMiraiFullUrl(){
         return getMiraiUrl() + ":" + getMiraiPort();
+    }
+
+    public static long getBotId(){
+        return ManageQQ.instance.getConfig().getLong("Bot.BotId");
+    }
+
+    public static List<Long> getGroups(){
+        return ManageQQ.instance.getConfig().getLongList("Bot.Groups");
+    }
+
+    public static String getMiraiApi(String api){
+        return getMiraiFullUrl() + api;
     }
 }

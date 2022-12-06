@@ -6,10 +6,8 @@ Database:
   Password: "password"
   Database: "db"
 MCL:
-  Url: "localhost"
+  Url: "http://127.0.0.1"
   Port: 8080
   verifyKey: "fill your key here"
 Bot:
   BotId: 114514
-  Groups:
-    - 1919810

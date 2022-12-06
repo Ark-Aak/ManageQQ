@@ -4,7 +4,7 @@ import plugin.manageqq.ManageQQ;
 
 public class BaseConfig {
 
-    public void reloadConfig(){
+    public static void reloadConfig(){
         ManageQQ.instance.reloadConfig();
     }
 }

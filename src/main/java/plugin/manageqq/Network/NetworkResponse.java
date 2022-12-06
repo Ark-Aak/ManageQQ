@@ -1,17 +1,16 @@
 package plugin.manageqq.Network;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
 
 public class NetworkResponse {
 
-    JSONObject json;
+    Json json;
 
     public NetworkResponse(String resource){
-        json = JSONObject.parseObject(resource);
+        json = new Json(resource);
     }
 
-    public NetworkResponse(JSONObject resource){
+    public NetworkResponse(Json resource){
         json = resource;
     }
 
@@ -24,7 +23,7 @@ public class NetworkResponse {
      *
      * @return 响应原文的JSON对象
      */
-    public JSONObject getPlainResponse(){
+    public Json getPlainResponse(){
         return json;
     }
 
@@ -44,8 +43,8 @@ public class NetworkResponse {
      * @param key 键名
      * @return key下的JSON对象
      */
-    public JSONObject getValueJson(Object key){
-        return json.getJSONObject(String.valueOf(key));
+    public Object getValueJson(Object key){
+        return json.get(String.valueOf(key));
     }
 
     /**
@@ -55,6 +54,6 @@ public class NetworkResponse {
      * @return key下的JSON数组对象
      */
     public JSONArray getJsonArray(Object key){
-        return json.getJSONArray(String.valueOf(key));
+        return json.getArray(String.valueOf(key));
     }
 }
