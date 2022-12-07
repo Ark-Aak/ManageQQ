@@ -35,7 +35,6 @@ public class MiraiUtil {
      */
     public static int getQueueMessageCount(MiraiSession session) throws MiraiUnknownException{
         MiraiNetworkResponse response = MiraiNetworkUtil.getQueueMessageCount(session);
-        Logger.debug(response.getPlainResponse().toJsonString());
         if(response.getErrorCode()!=0){
             throw new MiraiUnknownException(response.getErrorCode());
         }

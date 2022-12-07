@@ -1,6 +1,6 @@
 name: ManageQQ
 version: '${project.version}'
-main: plugin.manageqq.ManageQQ
+main: eosgame.manageqq.ManageQQ
 api-version: 1.16
 prefix: ManageQQ
 load: POSTWORLD

@@ -16,12 +16,10 @@ public class MiraiGroupMessageEvent extends MiraiGroupEvent{
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        // 事件对象的「获取处理器」方法
         return handlers;
     }
 
     public static HandlerList getHandlerList() {
-        // 事件类的「获取处理器」方法
         return handlers;
     }
 

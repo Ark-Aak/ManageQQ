@@ -96,9 +96,25 @@ public class MiraiNetworkUtil {
     public static MiraiNetworkResponse getQueueMessage(MiraiSession session,int count){
         return new MiraiNetworkResponse(
                 NetworkUtil.sendGet(
-                        MiraiConfig.getMiraiApi(MiraiAPIList.COUNT_MESSAGE),
+                        MiraiConfig.getMiraiApi(MiraiAPIList.FETCH_MESSAGE),
                         "sessionKey=" + session.sessionKey
                         + "&count=" + count
+                )
+        );
+    }
+
+    /**
+     * 获取所有未读消息
+     *
+     * @param session session实例
+     * @return Api返回的Response
+     */
+    public static MiraiNetworkResponse getAllQueueMessage(MiraiSession session){
+        return new MiraiNetworkResponse(
+                NetworkUtil.sendGet(
+                        MiraiConfig.getMiraiApi(MiraiAPIList.FETCH_MESSAGE),
+                        "sessionKey=" + session.sessionKey
+                                + "&count=" + String.valueOf(getQueueMessageCount(session).getData())
                 )
         );
     }

@@ -18,7 +18,8 @@ public class NetworkUtil {
      * @return URL 所代表远程资源的响应结果
      */
     public static NetworkResponse sendGet(String url, String param) {
-        Logger.debug("Send GET to " + url + "?" + param);
+        if(param.equals("")){Logger.debug("Send GET to " + url);}
+        else{Logger.debug("Send GET to " + url + "?" + param);}
         StringBuilder result = new StringBuilder();
         BufferedReader in = null;
         try {
@@ -46,6 +47,7 @@ public class NetworkUtil {
                 e2.printStackTrace();
             }
         }
+        Logger.debug("Result: " + result.toString());
         return new NetworkResponse(result.toString());
     }
     /**
@@ -94,6 +96,7 @@ public class NetworkUtil {
                 ex.printStackTrace();
             }
         }
+        Logger.debug("Result: " + result.toString());
         return new NetworkResponse(result.toString());
     }
 }
