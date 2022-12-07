@@ -2,93 +2,20 @@
 ManageQQ是一款和QQ进行互通的类似群管的插件。  
 # 使用方法  
 ## 前置插件
-本插件依赖MiraiMC，推荐使用MiraiMC-1.7版本作为前置  
-本插件依赖Vault作为经济前置  
-本插件依赖PlaceholderAPI作为变量前置  
+~~本插件依赖MiraiMC，推荐使用MiraiMC-1.7版本作为前置~~  
+由于MiraiMC并未更新其上游Mirai，现改用Mirai-HttpApi  
+依赖Mirai Console Loader  
 ## 配置文件
 ```yaml
-enabled-groups:               #启用机器人的群聊
-  - 764136404
-enabled-bots:                 #启用的机器人
-  - 3566096221
-admin:                        #认定的管理
-  - 1265723427
-Action:
-  pay: true                   #经济模块
-  server2qq: true             #服务器到QQ消息互通
-  qq2server: true             #QQ到服务器信息互通
-  info: true                  #玩家信息
-  command: true               #群内执行指令
-  bind: true                  #绑定模块
-  joinMessage: false          #服务器加入消息
-  leaveMessage: false         #服务器退出消息
-  joinGroupMessage: true      #加入群聊消息(未完成)
-  leaveGroupMessage: true     #退出群聊消息(未完成)
-  cave: true                  #回声洞(依赖MongoDB数据库)
-Config:
-  server2qq:
-    prefix:
-      enable: true            #是否开启服务器到QQ消息互通前缀，若值为false则转发所有消息
-      string: "[GR]"          #若值为true，转发以这个值为前缀的消息
-  qq2server:
-    prefix:
-      enable: true            #是否开启QQ到服务器消息互通前缀，若值为false则转发所有消息
-      string: "[GA]"          #若值为true，转发以这个值为前缀的消息
-  pay:
-    max: 20000                #单次金币转账最大额度
-    tax: 1                    #转账税(百分比)(未完成)
-    bank_max: 2000000         #银行余额最大值
-    interest: 0.1             #银行利息(百分比)(未完成)
-  info:
-    text: |-                  #玩家信息格式，支持PAPI
-      ====================
-      玩家名%player_name%
-      ====================
-  bind:
-    bindTokenLength: 15       #绑定Token的长度
-    allowRebind: false        #允许重复绑定
-    allowUnbind: false        #允许解除绑定(未完成)
-    forceBind: false          #强制绑定，若为true则未绑定的玩家会在120秒内被踢出
-Database:                     #MongoDB数据库信息
-  Enabled: false              #是否启用，若不启用则回声洞功能无法使用
-  Url: "localhost"            #地址
-  Port: 27017                 #端口，默认27017
-  Username: "user"            #用户名
-  Password: "password"        #密码
-  Database: "db"              #数据库名称
-Message:
-  JoinServer: "玩家%player_name%加入了服务器！"
-  QuitServer: "玩家%player_name%退出了服务器！"
-  JoinGroup: "欢迎新人加入EOS服务器！"
-  QuitGroup: "有人退出了群聊！"
-  AutoReply:                  #关键词自动回复(未完成)
-    Count: 2
-    1:
-      Content: "谢谢"
-      Reply: "不用谢"
-      Mute: 0
-      Recall: false
-    2:
-      Content: "RNM"
-      Reply: "违禁词撤回"
-      Mute: 600
-      Recall: true
-  help: |-                    #执行.help时输出的内容
-    可用命令列表：
-    .online-players |获取在线玩家列表
-    .bind 玩家名 |申请绑定账号
-    .execute 指令 |执行命令
-    .bank balance 玩家名 |查看银行余额
-    .bank deposit 金额 |存入金币
-    .bank withdraw 金额 |取出金币
-    .info |玩家信息
-    .pay 玩家名 金额 |支付给玩家金币
-    .cave |获取一条回声洞
-    .cave put 内容 |投稿一条回声洞
-BindData:                     #勿动
-
-Index:                        #勿动
-
-BankData:                     #勿动
-
+Database:                             #MongoDB
+  Enabled: false                      #是否启用
+  Url: "mongodb://localhost:27017"    #MongoDB连接Url，可以百度格式
+MCL:                                  #Mirai Console Loader配置
+  Url: "http://127.0.0.1"             #MCL Url
+  Port: 8080                          #MCL 端口
+  verifyKey: "fill your key here"     #MCL verifyKey
+  queryDelay: 40                      #Http轮询间隔（以刻为单位，20Tick=1s）
+Bot:                                  #机器人配置
+  Debug: false                        #调试模式（无需要不用开启，会输出大量调试信息）
+  BotId: 114514                       #机器人的QQ号
 ```
