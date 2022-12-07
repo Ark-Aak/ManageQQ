@@ -2,6 +2,7 @@ package eosgame.manageqq.Mirai.Message;
 
 import com.alibaba.fastjson2.JSONArray;
 import eosgame.manageqq.Mirai.Message.MessageType.MessageBase;
+import eosgame.manageqq.Mirai.MiraiMember;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +10,11 @@ import java.util.List;
 public class MessageChain {
 
     private final List<MessageBase> chain = new ArrayList<>();
-    private MessageSender sender;
+    private MiraiMember sender;
 
     public MessageChain(){}
 
-    public MessageChain(MessageSender sender){
+    public MessageChain(MiraiMember sender){
         this.sender = sender;
     }
 
@@ -37,7 +38,7 @@ public class MessageChain {
         return res;
     }
 
-    public MessageSender getSender(){
+    public MiraiMember getSender(){
         return sender;
     }
 }
