@@ -1,9 +1,14 @@
 package eosgame.manageqq;
 
+import eosgame.manageqq.Configs.MiraiConfig;
 import eosgame.manageqq.Exceptions.MiraiUnknownException;
+import eosgame.manageqq.Mirai.Message.MessageChain;
+import eosgame.manageqq.Mirai.Message.MessageType.MessagePlain;
 import eosgame.manageqq.Mirai.MiraiBotUtil;
+import eosgame.manageqq.Runnable.MessageGetter;
 import eosgame.manageqq.Mirai.MiraiSession;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -14,12 +19,14 @@ import java.util.logging.Logger;
 import eosgame.manageqq.Commands.mqqExecutor;
 import eosgame.manageqq.Listener.PlayerChatHandler;
 import eosgame.manageqq.Exceptions.MiraiBotDoesNotExistException;
+import org.bukkit.scheduler.BukkitTask;
 
 public final class ManageQQ extends JavaPlugin{
 
     public static Logger log;
     public static JavaPlugin instance;
     public static MiraiSession session;
+    public static BukkitTask getter;
 
     public static String getRandomString(long length){
         String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -46,10 +53,12 @@ public final class ManageQQ extends JavaPlugin{
         }
         MiraiBotUtil.init(false);
         log.info("sessionKey=" + session.sessionKey);
-        log.info("注册事件...");
+        log.info("注册事件" + ChatColor.GREEN + "AsyncChatEvent...");
         Bukkit.getPluginManager().registerEvents(new PlayerChatHandler(), this);
         log.info("注册命令...");
         Objects.requireNonNull(Bukkit.getPluginCommand("mqq")).setExecutor(new mqqExecutor());
+        log.info("启动线程...");
+        getter = new MessageGetter().runTaskTimerAsynchronously(this, MiraiConfig.getQueryDelay(),MiraiConfig.getQueryPeriod());
         log.info("插件已启动！感谢您的使用");
         log.info("===============================");
     }

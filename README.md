@@ -14,7 +14,8 @@ MCL:                                  #Mirai Console Loader配置
   Url: "http://127.0.0.1"             #MCL Url
   Port: 8080                          #MCL 端口
   verifyKey: "fill your key here"     #MCL verifyKey
-  queryDelay: 40                      #Http轮询间隔（以刻为单位，20Tick=1s）
+  queryDelay: 40                      #Http第一次轮询前的等待（以刻为单位，20Tick=1s）
+  queryPeriod: 40                     #Http轮询间隔（以刻为单位，20Tick=1s）
 Bot:                                  #机器人配置
   Debug: false                        #调试模式（无需要不用开启，会输出大量调试信息）
   BotId: 114514                       #机器人的QQ号

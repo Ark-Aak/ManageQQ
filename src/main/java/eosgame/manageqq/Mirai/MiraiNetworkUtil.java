@@ -1,6 +1,7 @@
 package eosgame.manageqq.Mirai;
 
 import eosgame.manageqq.Configs.MiraiConfig;
+import eosgame.manageqq.Mirai.Message.MessageChain;
 import eosgame.manageqq.Network.Json;
 import eosgame.manageqq.Network.NetworkUtil;
 
@@ -115,6 +116,19 @@ public class MiraiNetworkUtil {
                         MiraiConfig.getMiraiApi(MiraiAPIList.FETCH_MESSAGE),
                         "sessionKey=" + session.sessionKey
                                 + "&count=" + String.valueOf(getQueueMessageCount(session).getData())
+                )
+        );
+    }
+
+    public static MiraiNetworkResponse sendMessage(MiraiSession session, long target, MessageChain chain){
+        Json json = new Json();
+        json.set("sessionKey",session.sessionKey);
+        json.set("target",target);
+        json.set("messageChain",chain.toJsonString());
+        return new MiraiNetworkResponse(
+                NetworkUtil.sendPost(
+                        MiraiConfig.getMiraiApi(MiraiAPIList.SEND_GROUP_MESSAGE),
+                        json.toJsonString()
                 )
         );
     }

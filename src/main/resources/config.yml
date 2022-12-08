@@ -9,7 +9,8 @@ MCL:
   Url: "http://127.0.0.1"
   Port: 8080
   verifyKey: "fill your key here"
-  queryDelay: 2000
+  queryDelay: 40
+  queryPeriod: 40
 Bot:
   Debug: false
   BotId: 114514

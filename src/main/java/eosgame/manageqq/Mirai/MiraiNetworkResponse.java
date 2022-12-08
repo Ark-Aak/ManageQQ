@@ -14,6 +14,7 @@ public class MiraiNetworkResponse extends NetworkResponse {
      *
      * @return Response中的code字段
      */
+    @Deprecated
     public int getErrorCode(){
         return (int) getValue("code");
     }
@@ -23,6 +24,7 @@ public class MiraiNetworkResponse extends NetworkResponse {
      *
      * @return Response中的msg字段
      */
+    @Deprecated
     public String getMessage(){
         return (String) getValue("msg");
     }
@@ -32,6 +34,7 @@ public class MiraiNetworkResponse extends NetworkResponse {
      *
      * @return Response中的data字段
      */
+    @Deprecated
     public Object getData(){
         return getValueJson("data");
     }

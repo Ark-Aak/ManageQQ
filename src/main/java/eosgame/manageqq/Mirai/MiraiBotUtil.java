@@ -1,6 +1,7 @@
 package eosgame.manageqq.Mirai;
 
 import com.alibaba.fastjson2.JSONArray;
+import eosgame.manageqq.Mirai.Message.MessageChain;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import eosgame.manageqq.Configs.MiraiConfig;
@@ -122,5 +123,12 @@ public class MiraiBotUtil {
             init(false);
         }
         return loginBot;
+    }
+
+    public static int sendMessage(long target, MessageChain chain){
+        if(!initMark){
+            init(false);
+        }
+        return MiraiNetworkUtil.sendMessage(session,target,chain).getInt("messageId");
     }
 }

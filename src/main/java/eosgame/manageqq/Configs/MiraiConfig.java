@@ -3,6 +3,7 @@ package eosgame.manageqq.Configs;
 import eosgame.manageqq.ManageQQ;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MiraiConfig {
 
@@ -35,6 +36,14 @@ public class MiraiConfig {
     }
 
     public static boolean getDebug(){
-        return ManageQQ.instance.getConfig().getBoolean("Bot.Debug");
+        return Objects.equals(ManageQQ.instance.getConfig().getString("Bot.Debug"), "true");
+    }
+
+    public static long getQueryDelay(){
+        return ManageQQ.instance.getConfig().getLong("MCL.queryDelay");
+    }
+
+    public static long getQueryPeriod(){
+        return ManageQQ.instance.getConfig().getLong("MCL.queryPeriod");
     }
 }

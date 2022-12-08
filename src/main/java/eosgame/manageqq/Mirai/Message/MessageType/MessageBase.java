@@ -17,4 +17,7 @@ public abstract class MessageBase {
 
     @NotNull
     public abstract JSONObject getAsJsonObject();
+
+    @NotNull
+    public abstract String getText();
 }

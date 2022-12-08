@@ -1,6 +1,7 @@
 package eosgame.manageqq.Network;
 
 import com.alibaba.fastjson2.JSONArray;
+import eosgame.manageqq.Logger;
 
 public class NetworkResponse {
 
@@ -33,8 +34,25 @@ public class NetworkResponse {
      * @param key 键名
      * @return key对应的value
      */
+    @Deprecated
     public Object getValue(Object key){
-        return json.get(String.valueOf(key));
+        return json.getObject(String.valueOf(key));
+    }
+
+    public int getInt(String key){
+        return json.getInt(key);
+    }
+
+    public long getLong(String key){
+        return json.getLong(key);
+    }
+
+    public String getString(String key){
+        return json.getString(key);
+    }
+
+    public Boolean getBoolean(String key){
+        return json.getBoolean(key);
     }
 
     /**
@@ -43,8 +61,9 @@ public class NetworkResponse {
      * @param key 键名
      * @return key下的JSON对象
      */
+    @Deprecated
     public Object getValueJson(Object key){
-        return json.get(String.valueOf(key));
+        return json.getObject(String.valueOf(key));
     }
 
     /**

@@ -11,8 +11,8 @@ public class MessageSource extends MessageBase{
 
     public MessageSource(Json resource) {
         super("Source");
-        id = (int) resource.get("id");
-        time = (int) resource.get("time");
+        id = resource.getInt("id");
+        time = resource.getInt("time");
     }
 
     public int getId(){
@@ -29,5 +29,10 @@ public class MessageSource extends MessageBase{
         res.put("id",id);
         res.put("time",time);
         return res;
+    }
+
+    @Override
+    public @NotNull String getText() {
+        return "";
     }
 }

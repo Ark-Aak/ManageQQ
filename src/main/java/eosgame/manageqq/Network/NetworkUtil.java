@@ -1,6 +1,7 @@
 package eosgame.manageqq.Network;
 
 import eosgame.manageqq.Logger;
+import eosgame.manageqq.Mirai.Message.MessageUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class NetworkUtil {
     /**
@@ -27,10 +30,11 @@ public class NetworkUtil {
             URL realUrl = new URL(urlNameString);
             URLConnection connection = realUrl.openConnection();
             connection.setRequestProperty("accept", "*/*");
+            connection.setRequestProperty("Charset", "UTF-8");
             connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
             connection.connect();
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             String line;
             while ((line = in.readLine()) != null) {
                 result.append(line);
@@ -47,8 +51,9 @@ public class NetworkUtil {
                 e2.printStackTrace();
             }
         }
-        Logger.debug("Result: " + result.toString());
-        return new NetworkResponse(result.toString());
+        String resString = result.toString();
+        Logger.debug("Result: " + resString);
+        return new NetworkResponse(resString);
     }
     /**
      * 向指定 URL 发送POST方法的请求
@@ -69,14 +74,14 @@ public class NetworkUtil {
             conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestProperty("Charset", "UTF-8");
-            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            conn.setRequestProperty("Content-Type", "application/json; charset=gbk");
             conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
             conn.setDoOutput(true);
             conn.setDoInput(true);
             out = new PrintWriter(conn.getOutputStream());
             out.print(param);
             out.flush();
-            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
             String line;
             while ((line = in.readLine()) != null) {
                 result.append(line);
@@ -96,7 +101,8 @@ public class NetworkUtil {
                 ex.printStackTrace();
             }
         }
-        Logger.debug("Result: " + result.toString());
-        return new NetworkResponse(result.toString());
+        String resString = result.toString();
+        Logger.debug("Result: " + resString);
+        return new NetworkResponse(resString);
     }
 }
