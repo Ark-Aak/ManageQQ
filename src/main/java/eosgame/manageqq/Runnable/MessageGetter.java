@@ -48,7 +48,7 @@ public class MessageGetter extends BukkitRunnable {
             for(int j=0;j<array.size();j++){
                 Json json = new Json(array.getJSONObject(j));
                 Logger.debug("处理消息链Json元素" + j);
-                Logger.debug(json.toJsonString());
+                Logger.debug("类型" + json.toJsonString());
                 switch (json.getString("type")){
                     case MessageTypeList.SOURCE:
                         messageChain.append(new MessageSource(json));
@@ -60,21 +60,6 @@ public class MessageGetter extends BukkitRunnable {
             }
             messageChains.add(messageChain);
         }
-        for (MessageChain msg : messageChains) {
-            String text = msg.toPlain();
-            Logger.debug("消息文本：" + text);
-            if (text.startsWith(".")) {
-                String[] args = text.split(" ");
-                Logger.debug("检测到命令" + args[0]);
-                if(args.length == 1){
-                    if (args[0].equals(".hello")) {
-                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("你好QWQ！"));
-                    }
-                    if (args[0].equals(".help")) {
-                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getHelp()));
-                    }
-                }
-            }
-        }
+        new MessageParser(messageChains).runTaskAsynchronously(ManageQQ.instance);
     }
 }
