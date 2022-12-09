@@ -5,6 +5,12 @@ ManageQQ是一款和QQ进行互通的类似群管的插件。
 ~~本插件依赖MiraiMC，推荐使用MiraiMC-1.7版本作为前置~~  
 由于MiraiMC并未更新其上游Mirai，现改用Mirai-HttpApi  
 依赖Mirai Console Loader  
+## 插件版本命名规则
+版本格式为[D/S/R]+版本号+build  
+D->开发版  
+S->快照版  
+R->正式版  
+build越大越新  
 ## 配置文件
 ```yaml
 Database:                             #MongoDB

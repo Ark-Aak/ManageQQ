@@ -1,10 +1,6 @@
 Database:
   Enabled: false
-  Url: "localhost"
-  Port: 27017
-  Username: "user"
-  Password: "password"
-  Database: "db"
+  Url: "mongodb://localhost:27017"
 MCL:
   Url: "http://127.0.0.1"
   Port: 8080
@@ -14,3 +10,7 @@ MCL:
 Bot:
   Debug: false
   BotId: 114514
+Message:
+  Help: |-
+    测试下帮助QWQ
+    这个也是QWQ

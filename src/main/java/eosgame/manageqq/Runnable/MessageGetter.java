@@ -2,6 +2,7 @@ package eosgame.manageqq.Runnable;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import eosgame.manageqq.Configs.MessageConfig;
 import eosgame.manageqq.Logger;
 import eosgame.manageqq.ManageQQ;
 import eosgame.manageqq.Mirai.*;
@@ -67,12 +68,10 @@ public class MessageGetter extends BukkitRunnable {
                 Logger.debug("检测到命令" + args[0]);
                 if(args.length == 1){
                     if (args[0].equals(".hello")) {
-                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("让我看看这玩意到底有没有问题！"));
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("你好QWQ！"));
                     }
-                }
-                else if(args.length == 2){
-                    if (args[0].equals(".say")){
-                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(args[1]));
+                    if (args[0].equals(".help")) {
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getHelp()));
                     }
                 }
             }
