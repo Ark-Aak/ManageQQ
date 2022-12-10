@@ -132,4 +132,42 @@ public class MiraiNetworkUtil {
                 )
         );
     }
+
+    public static MiraiNetworkResponse getMemberInfo(MiraiSession session, long group, long target){
+        return new MiraiNetworkResponse(
+                NetworkUtil.sendGet(
+                        MiraiConfig.getMiraiApi(MiraiAPIList.GET_MEMBER_INFO),
+                        "sessionKey=" + session.sessionKey
+                        + "&target=" + group
+                        + "&memberId=" + target
+                )
+        );
+    }
+
+    public static MiraiNetworkResponse muteMember(MiraiSession session, long group, long target, long time){
+        Json json = new Json();
+        json.set("sessionKey",session.sessionKey);
+        json.set("target",group);
+        json.set("memberId",target);
+        json.set("time",time);
+        return new MiraiNetworkResponse(
+                NetworkUtil.sendPost(
+                        MiraiConfig.getMiraiApi(MiraiAPIList.MUTE_MEMBER),
+                        json.toJsonString()
+                )
+        );
+    }
+
+    public static MiraiNetworkResponse recall(MiraiSession session, long target, long id){
+        Json json = new Json();
+        json.set("sessionKey",session.sessionKey);
+        json.set("target",target);
+        json.set("messageId",id);
+        return new MiraiNetworkResponse(
+                NetworkUtil.sendPost(
+                        MiraiConfig.getMiraiApi(MiraiAPIList.RECALL),
+                        json.toJsonString()
+                )
+        );
+    }
 }

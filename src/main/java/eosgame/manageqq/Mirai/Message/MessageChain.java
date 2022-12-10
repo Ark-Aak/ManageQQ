@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import eosgame.manageqq.Logger;
 import eosgame.manageqq.Mirai.Message.MessageType.MessageBase;
 import eosgame.manageqq.Mirai.Message.MessageType.MessagePlain;
+import eosgame.manageqq.Mirai.Message.MessageType.MessageSource;
 import eosgame.manageqq.Mirai.MiraiGroup;
 import eosgame.manageqq.Mirai.MiraiMember;
 import jdk.jpackage.internal.Log;
@@ -17,16 +18,21 @@ public class MessageChain {
     private final List<MessageBase> chain = new ArrayList<>();
     private MiraiMember sender;
     private MiraiGroup group;
+    private int msgId = -1;
 
     public MessageChain(){}
 
-    public MessageChain(MiraiMember sender,MiraiGroup group){
+    public MessageChain(MiraiMember sender){
         this.sender = sender;
-        this.group = group;
+        this.group = sender.getGroupMirai();
     }
 
     public void append(MessageBase message){
         chain.add(message);
+        if(message.getMessageType().equals(MessageTypeList.SOURCE)){
+            MessageSource source = (MessageSource) message;
+            msgId = source.getId();
+        }
     }
 
     public List<MessageBase> getMessageList(){
@@ -70,5 +76,9 @@ public class MessageChain {
         MessageChain res = new MessageChain();
         res.append(new MessagePlain(text));
         return res;
+    }
+
+    public int getMsgId() {
+        return msgId;
     }
 }

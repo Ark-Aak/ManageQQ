@@ -45,6 +45,8 @@ public final class ManageQQ extends JavaPlugin{
         log=getLogger();
         log.info("===============================");
         log.info("欢迎使用ManageQQ！作者Anschluss_zeit");
+        log.info("项目使用GPLv3开源");
+        log.info("项目地址https://github.com/EOS-GAME/ManageQQ");
         log.info("由于MiraiMC长期不更新上游依赖，现在改用HttpApi");
         //Bukkit.getPluginManager().registerEvents(this, this);
         File f=new File("config.yml");

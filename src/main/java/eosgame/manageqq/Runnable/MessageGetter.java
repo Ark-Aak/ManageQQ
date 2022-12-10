@@ -37,10 +37,10 @@ public class MessageGetter extends BukkitRunnable {
             }
             MessageChain messageChain = new MessageChain(
                     new MiraiMember(
-                            new Json(data.getJSONObject(i).getJSONObject("sender"))
-                    ),
-                    new MiraiGroup(
-                            new Json(data.getJSONObject(i).getJSONObject("sender").getJSONObject("group"))
+                            new Json(data.getJSONObject(i).getJSONObject("sender")),
+                            new MiraiGroup(
+                                    new Json(data.getJSONObject(i).getJSONObject("sender").getJSONObject("group"))
+                            )
                     )
             );
             JSONArray array = object.getJSONArray("messageChain");

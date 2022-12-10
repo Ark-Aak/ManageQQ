@@ -10,7 +10,27 @@ MCL:
 Bot:
   Debug: false
   BotId: 114514
+  BanWord: |-
+    傻逼/true
+  BanPeople: |-
+    1919810
 Message:
   Help: |-
     测试下帮助QWQ
     这个也是QWQ
+  NoPermission: |-
+    你没有权限QWQ！
+    试试其他的命令吧QWQ
+  BotNoPermission: |-
+    QAQ，我是个卑微的机器人，不敢禁言这个人呢QAQ
+  NoCommand: |-
+    啊哦，貌似没找到这个命令呢QWQ？
+    也许你可以尝试下.help来查看命令
+  NotANumber: |-
+    啊哦，貌似输入的不是个数字呢QAQ
+  InDeveloping: |-
+    貌似这个功能正在开发呢QWQ！
+    再等等吧QWQ！
+  Recall: |-
+    貌似你的发言触发了群主设置的规则QWQ？
+    所以被撤回啦QWQ！

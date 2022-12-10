@@ -131,4 +131,9 @@ public class MiraiBotUtil {
         }
         return MiraiNetworkUtil.sendMessage(session,target,chain).getInt("messageId");
     }
+
+    public static boolean hasPermission(MiraiGroup group,MiraiMember target){
+        MiraiMember bot = new MiraiMember(session.bindBot,group);
+        return target.getPermission() < bot.getPermission();
+    }
 }

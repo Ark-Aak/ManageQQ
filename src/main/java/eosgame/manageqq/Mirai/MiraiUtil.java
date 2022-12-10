@@ -1,8 +1,10 @@
 package eosgame.manageqq.Mirai;
 
+import eosgame.manageqq.Configs.MessageConfig;
 import eosgame.manageqq.Exceptions.MiraiUnknownException;
 import eosgame.manageqq.Exceptions.MiraiVerifyKeyInvalidException;
 import eosgame.manageqq.Logger;
+import eosgame.manageqq.Mirai.Message.MessageType.MessageSource;
 import eosgame.manageqq.Network.Json;
 
 public class MiraiUtil {
@@ -44,5 +46,34 @@ public class MiraiUtil {
     public static Json getQueueMessage(MiraiSession session,int count) throws MiraiUnknownException{
         MiraiNetworkResponse response = MiraiNetworkUtil.getQueueMessage(session,count);
         return response.getPlainResponse();
+    }
+
+    public static long hasBanWord(String word){
+        String[] words = MessageConfig.getBanWord().split("\n");
+        for(String str : words){
+            String[] part = str.split("/");
+            if(part[1].equals("true")){
+                String symbol = "~!@#$%^&*()_+`-={}[]|\\;':\"<>?,./，。；、 《》“”‘’—";
+                for(int i=0;i<symbol.length();i++){
+                    while(word.indexOf(symbol.charAt(i)) != -1){
+                        word = word.replace(symbol.substring(i,i+1),"");
+                    }
+                }
+            }
+            if(word.contains(part[0])){
+                return Long.parseLong(part[2]);
+            }
+        }
+        return 0;
+    }
+
+    public static boolean isBanPeople(long id){
+        String[] people = MessageConfig.getBanPeople().split("\n");
+        for(String str : people){
+            if(id == Long.parseLong(str)){
+                return true;
+            }
+        }
+        return false;
     }
 }
