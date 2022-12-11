@@ -1,6 +1,7 @@
 Database:
   Enabled: false
   Url: "mongodb://localhost:27017"
+  Db: "cave"
 MCL:
   Url: "http://127.0.0.1"
   Port: 8080
@@ -34,3 +35,7 @@ Message:
   Recall: |-
     貌似你的发言触发了群主设置的规则QWQ？
     所以被撤回啦QWQ！
+  OK: |-
+    操作成功完成QWQ！
+  Disabled: |-
+    功能未开启QAQ...

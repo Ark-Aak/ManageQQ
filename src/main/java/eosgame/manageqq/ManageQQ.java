@@ -1,6 +1,8 @@
 package eosgame.manageqq;
 
+import eosgame.manageqq.Configs.DataBaseConfig;
 import eosgame.manageqq.Configs.MiraiConfig;
+import eosgame.manageqq.Databases.MongoUtil;
 import eosgame.manageqq.Exceptions.MiraiUnknownException;
 import eosgame.manageqq.Mirai.Message.MessageChain;
 import eosgame.manageqq.Mirai.Message.MessageType.MessagePlain;
@@ -61,6 +63,10 @@ public final class ManageQQ extends JavaPlugin{
         Objects.requireNonNull(Bukkit.getPluginCommand("mqq")).setExecutor(new mqqExecutor());
         log.info("启动线程...");
         getter = new MessageGetter().runTaskTimerAsynchronously(this, MiraiConfig.getQueryDelay(),MiraiConfig.getQueryPeriod());
+        if(DataBaseConfig.getEnabled()){
+            log.info("初始化MongoDB...");
+            MongoUtil.Initialization(DataBaseConfig.getUrl(),DataBaseConfig.getDb());
+        }
         log.info("插件已启动！感谢您的使用");
         log.info("===============================");
     }

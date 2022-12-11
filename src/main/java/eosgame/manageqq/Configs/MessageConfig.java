@@ -39,4 +39,13 @@ public class MessageConfig {
     public static String getRecall(){
         return ManageQQ.instance.getConfig().getString("Message.Recall");
     }
+
+    public static String getOK(){
+        return ManageQQ.instance.getConfig().getString("Message.OK");
+    }
+
+    public static String getDisabled(){
+        return ManageQQ.instance.getConfig().getString("Message.Disabled");
+    }
+
 }

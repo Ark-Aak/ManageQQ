@@ -6,7 +6,7 @@
 
     <groupId>Plugin</groupId>
     <artifactId>ManageQQ</artifactId>
-    <version>D2.0b17</version>
+    <version>D2.0b19</version>
     <packaging>jar</packaging>
 
     <name>ManageQQ</name>
@@ -94,7 +94,6 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
             <version>4.7.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
@@ -106,7 +105,6 @@
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.11.1</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

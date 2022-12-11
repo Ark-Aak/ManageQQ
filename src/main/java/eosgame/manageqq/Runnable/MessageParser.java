@@ -1,5 +1,7 @@
 package eosgame.manageqq.Runnable;
 
+import eosgame.manageqq.Cave.CaveUtil;
+import eosgame.manageqq.Configs.DataBaseConfig;
 import eosgame.manageqq.Configs.MessageConfig;
 import eosgame.manageqq.Logger;
 import eosgame.manageqq.ManageQQ;
@@ -10,6 +12,7 @@ import eosgame.manageqq.Mirai.MiraiMember;
 import eosgame.manageqq.Mirai.MiraiNetworkUtil;
 import eosgame.manageqq.Mirai.MiraiUtil;
 import eosgame.manageqq.Network.NetworkUtil;
+import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -57,14 +60,28 @@ public class MessageParser extends BukkitRunnable {
                         return;
                     }
                     if (args[0].equals(".cave")) {
-                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getInDeveloping()));
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            return;
+                        }
+                        Document doc = CaveUtil.getCave();
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(
+                                String.valueOf(doc.get("content")) + "\n——" + String.valueOf(doc.get("sender"))
+                        ));
                         return;
                     }
                 }
                 else if(args.length == 3){
                     if (args[0].equals(".cave")) {
-                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getInDeveloping()));
-                        return;
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            return;
+                        }
+                        if(args[1].equals("put")) {
+                            CaveUtil.addCave(args[2],msg.getSender().getMemberName(),msg.getSender().getId());
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getOK()));
+                            return;
+                        }
                     }
                     if (args[0].equals(".mute")) {
                         try{

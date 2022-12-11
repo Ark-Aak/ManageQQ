@@ -25,11 +25,7 @@ public class MongoUtil {
     public static void createCollection(String name){
         try{
             db.createCollection(name);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-            //反正我是不信你创建集合会报错的
-            //咱也没办法对吧
-        }
+        } catch (Exception ignored) {}
     }
 
     public static boolean insertOne(String coll,Document doc){
