@@ -12,7 +12,7 @@ Bot:
   Debug: false
   BotId: 114514
   BanWord: |-
-    傻逼/true
+    傻逼/true/120
   BanPeople: |-
     1919810
 Message:
