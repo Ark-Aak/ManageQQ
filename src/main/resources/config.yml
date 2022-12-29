@@ -15,6 +15,10 @@ Bot:
     傻逼/true/120
   BanPeople: |-
     1919810
+  BanLimit: 500
+  DetectLimit: 0.75
+  CountDown: 10
+  SpamMute: 600
 Message:
   Help: |-
     测试下帮助QWQ
@@ -39,3 +43,15 @@ Message:
     操作成功完成QWQ！
   Disabled: |-
     功能未开启QAQ...
+  BindFailed: |-
+    &c貌似绑定失败了QAQ...再检查下你的&6玩家名&c和&6Token&c吧QWQ！
+  BindSuccessful: |-
+    &a绑定成功QWQ！
+  Requested: |-
+    申请成功QWQ！
+    请在游戏中使用{command}来完成绑定！
+  HasBind: |-
+    你的QQ已经绑定了{player}！
+    不能再绑定了QAQ！
+  DontSpam: |-
+    不要刷屏哦QWQ!

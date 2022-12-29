@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import eosgame.manageqq.Commands.mqqExecutor;
@@ -29,17 +30,9 @@ public final class ManageQQ extends JavaPlugin{
     public static JavaPlugin instance;
     public static MiraiSession session;
     public static BukkitTask getter;
-
-    public static String getRandomString(long length){
-        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random=new Random();
-        StringBuilder sb=new StringBuilder();
-        for(int i=0;i<length;i++){
-            int number=random.nextInt(62);
-            sb.append(str.charAt(number));
-        }
-        return sb.toString();
-    }
+    public static ConcurrentHashMap<Long, Long> SimTot = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Long, String> lastMsg = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Long, Long> lastTime = new ConcurrentHashMap<>();
 
     @Override
     public void onEnable() {
@@ -48,7 +41,7 @@ public final class ManageQQ extends JavaPlugin{
         log.info("===============================");
         log.info("欢迎使用ManageQQ！作者Anschluss_zeit");
         log.info("项目使用GPLv3开源");
-        log.info("项目地址https://github.com/EOS-GAME/ManageQQ");
+        log.info("项目地址https://github.com/LW-GAME/ManageQQ");
         log.info("由于MiraiMC长期不更新上游依赖，现在改用HttpApi");
         //Bukkit.getPluginManager().registerEvents(this, this);
         File f=new File("config.yml");

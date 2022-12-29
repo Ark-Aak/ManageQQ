@@ -8,7 +8,6 @@ import eosgame.manageqq.Mirai.Message.MessageType.MessagePlain;
 import eosgame.manageqq.Mirai.Message.MessageType.MessageSource;
 import eosgame.manageqq.Mirai.MiraiGroup;
 import eosgame.manageqq.Mirai.MiraiMember;
-import jdk.jpackage.internal.Log;
 
 import java.util.ArrayList;
 import java.util.List;

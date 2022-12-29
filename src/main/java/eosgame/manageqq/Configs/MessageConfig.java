@@ -48,4 +48,23 @@ public class MessageConfig {
         return ManageQQ.instance.getConfig().getString("Message.Disabled");
     }
 
+    public static String getBindFailed(){
+        return ManageQQ.instance.getConfig().getString("Message.BindFailed");
+    }
+
+    public static String getBindSuccessful(){
+        return ManageQQ.instance.getConfig().getString("Message.BindSuccessful");
+    }
+
+    public static String getRequested(){
+        return ManageQQ.instance.getConfig().getString("Message.Requested");
+    }
+
+    public static String getHasBind(){
+        return ManageQQ.instance.getConfig().getString("Message.HasBind");
+    }
+
+    public static String getDontSpam(){
+        return ManageQQ.instance.getConfig().getString("Message.DontSpam");
+    }
 }

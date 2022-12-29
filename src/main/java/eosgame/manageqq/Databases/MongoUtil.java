@@ -1,8 +1,10 @@
 package eosgame.manageqq.Databases;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,20 +43,34 @@ public class MongoUtil {
     public static List<Document> find(String coll) {
         try {
             FindIterable<Document> findIterable = db.getCollection(coll).find();
-            List<Document> doc;
-            try (MongoCursor<Document> mongoCursor = findIterable.iterator()) {
-                doc = new ArrayList<>();
-                while (mongoCursor.hasNext()) {
-                    doc.add(mongoCursor.next());
-                }
-            }
-            return doc;
+            return getDocuments(findIterable);
         } catch (Exception e) {
             return null;
         }
     }
 
-    public static boolean deleteOne(String coll, Bson filter){
+    public static List<Document> find(String coll, BasicDBObject obj){
+        try {
+            FindIterable<Document> findIterable = db.getCollection(coll).find(obj);
+            return getDocuments(findIterable);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @NotNull
+    private static List<Document> getDocuments(FindIterable<Document> findIterable) {
+        List<Document> doc;
+        try (MongoCursor<Document> mongoCursor = findIterable.iterator()) {
+            doc = new ArrayList<>();
+            while (mongoCursor.hasNext()) {
+                doc.add(mongoCursor.next());
+            }
+        }
+        return doc;
+    }
+
+    public static boolean deleteOne(String coll, BasicDBObject filter){
         try{
             db.getCollection(coll).deleteOne(filter);
             return true;

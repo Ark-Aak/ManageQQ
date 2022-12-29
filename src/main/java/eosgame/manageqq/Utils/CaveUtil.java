@@ -1,4 +1,4 @@
-package eosgame.manageqq.Cave;
+package eosgame.manageqq.Utils;
 
 import org.bson.Document;
 import eosgame.manageqq.Databases.MongoUtil;
@@ -17,7 +17,7 @@ public class CaveUtil {
         String dt = df.format(date);
         MongoUtil.createCollection("cave");
         if(!MongoUtil.insertOne("cave",new Document("sender",user).append("content",content).append("senderId",id).append("date",dt))){
-            ManageQQ.log.info("失败辣");
+            ManageQQ.log.warning("数据库出现错误...");
         }
     }
 

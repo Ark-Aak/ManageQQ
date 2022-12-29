@@ -1,21 +1,27 @@
 package eosgame.manageqq.Runnable;
 
-import eosgame.manageqq.Cave.CaveUtil;
+import eosgame.manageqq.Configs.MiraiConfig;
+import eosgame.manageqq.Utils.BindUtil;
+import eosgame.manageqq.Utils.CaveUtil;
 import eosgame.manageqq.Configs.DataBaseConfig;
 import eosgame.manageqq.Configs.MessageConfig;
 import eosgame.manageqq.Logger;
 import eosgame.manageqq.ManageQQ;
 import eosgame.manageqq.Mirai.Message.MessageChain;
-import eosgame.manageqq.Mirai.Message.MessageType.MessagePlain;
 import eosgame.manageqq.Mirai.MiraiBotUtil;
 import eosgame.manageqq.Mirai.MiraiMember;
 import eosgame.manageqq.Mirai.MiraiNetworkUtil;
 import eosgame.manageqq.Mirai.MiraiUtil;
 import eosgame.manageqq.Network.NetworkUtil;
+import eosgame.manageqq.Utils.StringUtil;
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
+import static eosgame.manageqq.ManageQQ.*;
 
 public class MessageParser extends BukkitRunnable {
 
@@ -41,6 +47,35 @@ public class MessageParser extends BukkitRunnable {
                     return;
                 }
             }
+            if(lastMsg.containsKey(msg.getSender().getId())){
+                String last = lastMsg.get(msg.getSender().getId());
+                double sim = StringUtil.getSimilarityRatio(last, msg.toPlain());
+                long lastSum = 0L;
+                if(SimTot.containsKey(msg.getSender().getId())){
+                    lastSum = SimTot.get(msg.getSender().getId());
+                }
+                if(sim >= MiraiConfig.getDetectLimit()){
+                    SimTot.put(msg.getSender().getId(), lastSum+(long)(sim*100));
+                }
+                else{
+                    SimTot.put(msg.getSender().getId(), lastSum-Math.min(MiraiConfig.getCountDown(),lastSum));
+                }
+                if(lastSum+(long)(sim*100) >= MiraiConfig.getBanLimit()){
+                    SimTot.put(msg.getSender().getId(), 0L);
+                    if(MiraiBotUtil.hasPermission(msg.getGroup(), msg.getSender())){
+                        msg.getSender().mute(MiraiConfig.getSpamMute());
+                    }
+                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDontSpam()));
+                    lastMsg.put(msg.getSender().getId(), msg.toPlain());
+                    return;
+                }
+                //MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("Sim value:" + sim + "\n" + "Sim total:" + SimTot.get(msg.getSender().getId())));
+            }
+            else{
+                SimTot.put(msg.getSender().getId(), 0L);
+            }
+            lastMsg.put(msg.getSender().getId(), msg.toPlain());
+            lastTime.put(msg.getSender().getId(), new Date().getTime());
             if (text.startsWith(".")) {
                 String[] args = text.split(" ");
                 Logger.debug("检测到命令" + args[0]);
@@ -68,6 +103,40 @@ public class MessageParser extends BukkitRunnable {
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(
                                 String.valueOf(doc.get("content")) + "\n——" + String.valueOf(doc.get("sender"))
                         ));
+                        return;
+                    }
+                }
+                else if(args.length == 2){
+                    if(args[0].equals(".bind")){
+                        Document doc = BindUtil.getBindById(msg.getSender().getId());
+                        if(doc != null){
+                            String message = MessageConfig.getHasBind();
+                            while(message.contains("{player}")){
+                                message = message.replace((CharSequence) "{player}", (CharSequence) doc.get("playerName"));
+                            }
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                            return;
+                        }
+                        String token=BindUtil.genNewToken(msg.getSender().getId(),args[1]);
+                        String message = MessageConfig.getRequested();
+                        while(message.contains("{command}")){
+                            message = message.replace("{command}","/mqq bind " + token);
+                        }
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                        return;
+                    }
+                    if(args[0].equals(".stats")){
+                        long target;
+                        try{
+                            target = Long.parseLong(args[1]);
+                        }catch (Exception e){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNotANumber()));
+                            return;
+                        }
+                        if(!SimTot.containsKey(target)){
+                            SimTot.put(target,0L);
+                        }
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(String.valueOf("Spam Score:" + SimTot.get(target))));
                         return;
                     }
                 }

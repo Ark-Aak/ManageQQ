@@ -46,4 +46,20 @@ public class MiraiConfig {
     public static long getQueryPeriod(){
         return ManageQQ.instance.getConfig().getLong("MCL.queryPeriod");
     }
+
+    public static long getBanLimit(){
+        return ManageQQ.instance.getConfig().getLong("Bot.BanLimit");
+    }
+
+    public static double getDetectLimit(){
+        return ManageQQ.instance.getConfig().getDouble("Bot.DetectLimit");
+    }
+
+    public static long getCountDown(){
+        return ManageQQ.instance.getConfig().getLong("Bot.CountDown");
+    }
+
+    public static long getSpamMute(){
+        return ManageQQ.instance.getConfig().getLong("Bot.SpamMute");
+    }
 }
