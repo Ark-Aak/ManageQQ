@@ -14,12 +14,14 @@ import eosgame.manageqq.Mirai.MiraiNetworkUtil;
 import eosgame.manageqq.Mirai.MiraiUtil;
 import eosgame.manageqq.Network.NetworkUtil;
 import eosgame.manageqq.Utils.StringUtil;
+import eosgame.manageqq.Utils.UserUtil;
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import static eosgame.manageqq.ManageQQ.*;
 
@@ -47,54 +49,69 @@ public class MessageParser extends BukkitRunnable {
                     return;
                 }
             }
-            if(lastMsg.containsKey(msg.getSender().getId())){
+            if(lastMsg.containsKey(msg.getSender().getId()) && lastTime.containsKey(msg.getSender().getId())){
                 String last = lastMsg.get(msg.getSender().getId());
                 double sim = StringUtil.getSimilarityRatio(last, msg.toPlain());
                 long lastSum = 0L;
+                long now = new Date().getTime(), lastSend = 0L;
                 if(SimTot.containsKey(msg.getSender().getId())){
                     lastSum = SimTot.get(msg.getSender().getId());
                 }
-                if(sim >= MiraiConfig.getDetectLimit()){
-                    SimTot.put(msg.getSender().getId(), lastSum+(long)(sim*100));
+                if(lastTime.containsKey(msg.getSender().getId())){
+                    lastSend = lastTime.get(msg.getSender().getId());
+                }
+                long finalScore = lastSum;
+                if(sim >= MiraiConfig.getDetectLimit() || now - lastSend <= MiraiConfig.getTimeLimit()){
+                    if(sim >= MiraiConfig.getDetectLimit()){
+                        finalScore += (long)(sim*100);
+                    }
+                    if(now - lastSend <= MiraiConfig.getTimeLimit()){
+                        finalScore += MiraiConfig.getTimeLimit() - (now - lastSend);
+                    }
+                    SimTot.put(msg.getSender().getId(), finalScore);
                 }
                 else{
                     SimTot.put(msg.getSender().getId(), lastSum-Math.min(MiraiConfig.getCountDown(),lastSum));
                 }
-                if(lastSum+(long)(sim*100) >= MiraiConfig.getBanLimit()){
+                if(finalScore >= MiraiConfig.getBanLimit()){
                     SimTot.put(msg.getSender().getId(), 0L);
                     if(MiraiBotUtil.hasPermission(msg.getGroup(), msg.getSender())){
                         msg.getSender().mute(MiraiConfig.getSpamMute());
                     }
                     MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDontSpam()));
                     lastMsg.put(msg.getSender().getId(), msg.toPlain());
+                    lastTime.put(msg.getSender().getId(), new Date().getTime());
                     return;
                 }
                 //MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("Sim value:" + sim + "\n" + "Sim total:" + SimTot.get(msg.getSender().getId())));
             }
             else{
                 SimTot.put(msg.getSender().getId(), 0L);
+                lastTime.put(msg.getSender().getId(), new Date().getTime());
             }
             lastMsg.put(msg.getSender().getId(), msg.toPlain());
             lastTime.put(msg.getSender().getId(), new Date().getTime());
-            if (text.startsWith(".")) {
+            if (text.startsWith(MiraiConfig.getCommandPrefix())) {
                 String[] args = text.split(" ");
+                args[0] = args[0].substring(MiraiConfig.getCommandPrefix().length());
                 Logger.debug("检测到命令" + args[0]);
+                String command = args[0];
                 if(args.length == 1){
-                    if (args[0].equals(".hello")) {
+                    if (command.equals("你好")) {
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("你好QWQ！"));
                         return;
                     }
-                    if (args[0].equals(".help")) {
+                    if (command.equals("帮助")) {
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getHelp()));
                         return;
                     }
-                    if (args[0].equals(".hitokoto")) {
+                    if (args[0].equals("一言")) {
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(
                                 NetworkUtil.sendGet("https://v1.hitokoto.cn","c=a&c=b&c=c&c=e&c=l&max_length=999").getString("hitokoto")
                         ));
                         return;
                     }
-                    if (args[0].equals(".cave")) {
+                    if (args[0].equals("回声洞")) {
                         if(!DataBaseConfig.getEnabled()){
                             MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
                             return;
@@ -105,27 +122,53 @@ public class MessageParser extends BukkitRunnable {
                         ));
                         return;
                     }
+                    if (args[0].equals("余额")){
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            return;
+                        }
+                        String message = StringUtil.replacePlaceholders(MessageConfig.getBalance(),"{eco}",String.valueOf(UserUtil.getCoin(msg.getSender().getId())));
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                        return;
+                    }
+                    if (args[0].equals("签到")){
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            return;
+                        }
+                        Random rand = new Random();
+                        long rnd = Math.abs(rand.nextLong()) % MiraiConfig.getMaxSignInCoin() + 1;
+                        if(UserUtil.canSignIn(msg.getSender().getId())){
+                            UserUtil.setSignInTime(msg.getSender().getId());
+                            UserUtil.addCoin(msg.getSender().getId(),rnd);
+                            String message = StringUtil.replacePlaceholders(MessageConfig.getSignInSucceed(),"{eco}",String.valueOf(rnd));
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                            return;
+                        }
+                        else{
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getSignInFailed()));
+                            return;
+                        }
+                    }
                 }
                 else if(args.length == 2){
-                    if(args[0].equals(".bind")){
+                    if(command.equals("绑定")){
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            return;
+                        }
                         Document doc = BindUtil.getBindById(msg.getSender().getId());
                         if(doc != null){
-                            String message = MessageConfig.getHasBind();
-                            while(message.contains("{player}")){
-                                message = message.replace((CharSequence) "{player}", (CharSequence) doc.get("playerName"));
-                            }
+                            String message = StringUtil.replacePlaceholders(MessageConfig.getHasBind(),"{player}", (String) doc.get("playerName"));
                             MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
                             return;
                         }
                         String token=BindUtil.genNewToken(msg.getSender().getId(),args[1]);
-                        String message = MessageConfig.getRequested();
-                        while(message.contains("{command}")){
-                            message = message.replace("{command}","/mqq bind " + token);
-                        }
+                        String message = StringUtil.replacePlaceholders(MessageConfig.getRequested(),"{command}","/mqq bind " + token);
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
                         return;
                     }
-                    if(args[0].equals(".stats")){
+                    if(command.equals("统计")){
                         long target;
                         try{
                             target = Long.parseLong(args[1]);
@@ -141,18 +184,23 @@ public class MessageParser extends BukkitRunnable {
                     }
                 }
                 else if(args.length == 3){
-                    if (args[0].equals(".cave")) {
+                    if (command.equals("回声洞")) {
                         if(!DataBaseConfig.getEnabled()){
                             MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
                             return;
                         }
-                        if(args[1].equals("put")) {
+                        if(args[1].equals("投稿")) {
+                            if(UserUtil.getCoin(msg.getSender().getId()) < MiraiConfig.getPutCaveCost()){
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getHasNoMoney()));
+                                return;
+                            }
+                            UserUtil.addCoin(msg.getSender().getId(), -1L * MiraiConfig.getPutCaveCost());
                             CaveUtil.addCave(args[2],msg.getSender().getMemberName(),msg.getSender().getId());
                             MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getOK()));
                             return;
                         }
                     }
-                    if (args[0].equals(".mute")) {
+                    if (command.equals("禁言")) {
                         try{
                             if(msg.getSender().getPermission() == 0){
                                 MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoPermission()));
@@ -168,6 +216,65 @@ public class MessageParser extends BukkitRunnable {
                             MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNotANumber()));
                         }
                         return;
+                    }
+                    if (command.equals("绑定")){
+                        if(args[1].equals("查询")){
+                            try{
+                                long target = Long.parseLong(args[2]);
+                                Document doc = BindUtil.getBindById(target);
+                                if(doc == null){
+                                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
+                                }
+                                else{
+                                    String message = StringUtil.replacePlaceholders(MessageConfig.getQueryBind(),"{player}",doc.getString("playerName"));
+                                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                                }
+                            }catch (NumberFormatException e){
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNotANumber()));
+                            }
+                            return;
+                        }
+                        if(args[1].equals("游戏名查询")){
+                            Document doc = BindUtil.getBindByName(args[2]);
+                            if(doc == null){
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
+                            }
+                            else{
+                                String message = StringUtil.replacePlaceholders(MessageConfig.getQueryBind(),"{player}",String.valueOf(doc.getLong("bindId")));
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                            }
+                            return;
+                        }
+                    }
+                }
+                else if(args.length == 4){
+                    if(command.equals("余额")){
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            return;
+                        }
+                        if(args[1].equals("增加")){
+                            long target,amount;
+                            try{
+                                if(msg.getSender().getPermission() == 0){
+                                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoPermission()));
+                                    return;
+                                }
+                                target = Long.parseLong(args[2]);
+                                amount = Long.parseLong(args[3]);
+                            }
+                            catch (NumberFormatException e){
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNotANumber()));
+                                return;
+                            }
+                            if(UserUtil.addCoin(target,amount)){
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getOK()));
+                            }
+                            else{
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getFailed()));
+                            }
+                            return;
+                        }
                     }
                 }
                 MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoCommand()));

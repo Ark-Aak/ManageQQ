@@ -35,9 +35,8 @@ public class BindUtil {
         long currentTime = System.currentTimeMillis();
         Date date = new Date(currentTime);
         String dt = df.format(date);
-        MongoUtil.createCollection("bind");
         if(!MongoUtil.insertOne("bind",new Document("playerName",playerName).append("bindId",nameToQQ.get(playerName)).append("date",dt))){
-            ManageQQ.log.warning("数据库出现错误...");
+            Logger.warn("警告！数据库出现错误！");
         }
         nameToToken.remove(playerName);
         nameToQQ.remove(playerName);
@@ -64,6 +63,9 @@ public class BindUtil {
         query.put("playerName",name);
         List<Document> docs = MongoUtil.find("bind",query);
         if(docs == null){
+            return null;
+        }
+        if(docs.size() == 0){
             return null;
         }
         if(docs.size() != 1){

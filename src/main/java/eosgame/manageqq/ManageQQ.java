@@ -4,8 +4,6 @@ import eosgame.manageqq.Configs.DataBaseConfig;
 import eosgame.manageqq.Configs.MiraiConfig;
 import eosgame.manageqq.Databases.MongoUtil;
 import eosgame.manageqq.Exceptions.MiraiUnknownException;
-import eosgame.manageqq.Mirai.Message.MessageChain;
-import eosgame.manageqq.Mirai.Message.MessageType.MessagePlain;
 import eosgame.manageqq.Mirai.MiraiBotUtil;
 import eosgame.manageqq.Runnable.MessageGetter;
 import eosgame.manageqq.Mirai.MiraiSession;
@@ -15,12 +13,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import eosgame.manageqq.Commands.mqqExecutor;
-import eosgame.manageqq.Listener.PlayerChatHandler;
+import eosgame.manageqq.Listener.PlayerJoinHandler;
 import eosgame.manageqq.Exceptions.MiraiBotDoesNotExistException;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -50,8 +47,8 @@ public final class ManageQQ extends JavaPlugin{
         }
         MiraiBotUtil.init(false);
         log.info("sessionKey=" + session.sessionKey);
-        log.info("注册事件" + ChatColor.GREEN + "AsyncChatEvent...");
-        Bukkit.getPluginManager().registerEvents(new PlayerChatHandler(), this);
+        log.info("注册事件" + ChatColor.GREEN + "PlayerJoinEvent...");
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinHandler(), this);
         log.info("注册命令...");
         Objects.requireNonNull(Bukkit.getPluginCommand("mqq")).setExecutor(new mqqExecutor());
         log.info("启动线程...");
@@ -59,6 +56,9 @@ public final class ManageQQ extends JavaPlugin{
         if(DataBaseConfig.getEnabled()){
             log.info("初始化MongoDB...");
             MongoUtil.Initialization(DataBaseConfig.getUrl(),DataBaseConfig.getDb());
+            MongoUtil.createCollection("bind");
+            MongoUtil.createCollection("cave");
+            MongoUtil.createCollection("user");
         }
         log.info("插件已启动！感谢您的使用");
         log.info("===============================");

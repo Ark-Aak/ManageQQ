@@ -5,10 +5,11 @@ Database:
 MCL:
   Url: "http://127.0.0.1"
   Port: 8080
-  verifyKey: "fill your key here"
-  queryDelay: 40
-  queryPeriod: 40
+  VerifyKey: "fill your key here"
+  QueryDelay: 40
+  QueryPeriod: 40
 Bot:
+  Enable: true
   Debug: false
   BotId: 114514
   BanWord: |-
@@ -19,6 +20,17 @@ Bot:
   DetectLimit: 0.75
   CountDown: 10
   SpamMute: 600
+  TimeLimit: 1500
+  SignInTimeLimit: 64800000
+  MaxSignInCoin: 1000
+  CommandPrefix: "."
+  PutCaveCost: 500
+  BindTimeOut: 2400
+  ForceBind: true
+CustomCommands:
+  兑换L币:
+    Cost: 500
+    Command: "cmi money give {}"
 Message:
   Help: |-
     测试下帮助QWQ
@@ -55,3 +67,21 @@ Message:
     不能再绑定了QAQ！
   DontSpam: |-
     不要刷屏哦QWQ!
+  Balance: |-
+    你的余额：{eco}个W币QWQ！
+  Failed: |-
+    啊哦，貌似失败了QAQ！
+  SignInSucceed: |-
+    签到成功QWQ！你获得了{eco}个W币！
+  SignInFailed: |-
+    签到失败QAQ...再等等吧QWQ...
+  HasNoMoney: |-
+    余额不足QAQ...
+  HasNoBind: |-
+    你没有绑定账号QAQ...
+  NoBind: |-
+    这个人没有绑定账号QWQ！
+  QueryBind: |-
+    这个人绑定的账号是：{player}
+  BindNotice: |-
+    &c服务器开启了强制绑定账号，请先绑定

@@ -13,23 +13,36 @@ R->正式版
 build越大越新  
 ## 配置文件
 ```yaml
-Database:                             #MongoDB
-  Enabled: false                      #是否启用
-  Url: "mongodb://localhost:27017"    #MongoDB连接Url，可以百度格式
-  Db: "cave"                          #数据库名称
-MCL:                                  #Mirai Console Loader配置
-  Url: "http://127.0.0.1"             #MCL Url
-  Port: 8080                          #MCL 端口
-  verifyKey: "fill your key here"     #MCL verifyKey
-  queryDelay: 40                      #Http第一次轮询前的等待（以刻为单位，20Tick=1s）
-  queryPeriod: 40                     #Http轮询间隔（以刻为单位，20Tick=1s）
-Bot:                                  #机器人配置
-  Debug: false                        #调试模式（无需要不用开启，会输出大量调试信息）
-  BotId: 114514                       #机器人的QQ号
-  BanWord: |-                         #敏感词，一行一个，格式为word/mode/muteTime
-    傻逼/true/120                      #word->敏感词，mode->true为忽略特殊符号，muteTime->禁言时长(秒)，为0禁用
-  BanPeople: |-                       #测试用的，填写QQ号
-    1919810                           #如果无必要请勿开启！
+Database:
+  Enabled: false #是否启用数据库
+  Url: "mongodb://localhost:27017" #MongoDB的连接字符串
+  Db: "cave" #数据库名称
+MCL:
+  Url: "http://127.0.0.1" #MCL-HttpApi的URL
+  Port: 8080 #MCL的端口
+  VerifyKey: "fill your key here" #MCL的verifyKey
+  QueryDelay: 40 #两次请求的延迟（刻为单位）
+  QueryPeriod: 40 #第一次请求前的等待
+Bot:
+  Enable: true #是否启用机器人模块
+  Debug: false #调试模式
+  BotId: 114514 #机器人的ID
+  #屏蔽词，格式为 词语/是否删除特殊符号/禁言时长（秒）
+  BanWord: |-
+    傻逼/true/120
+  #调试功能，无需更改
+  BanPeople: |-
+    1919810
+  BanLimit: 500 #Spam Score分数到多少会被禁言
+  DetectLimit: 0.75 #两条消息最低被检测到的相似度（0~1）
+  CountDown: 10 #发一次正常的消息减少的分数
+  SpamMute: 600 #被禁言的时长
+  TimeLimit: 1500 #两次消息最小间隔，若不满间隔会加（TimeLimit-实际间隔）分
+  SignInTimeLimit: 64800000 #签到的间隔时长
+  CommandPrefix: "." #指令前缀
+  PutCaveCost: 500 #投稿回声洞需要的W币
+  BindTimeOut: 2400 #绑定超时时间（刻）
+  ForceBind: true #是否开启强制绑定
 Message:
   Help: |-
     测试下帮助QWQ
@@ -54,4 +67,34 @@ Message:
     操作成功完成QWQ！
   Disabled: |-
     功能未开启QAQ...
+  BindFailed: |-
+    &c貌似绑定失败了QAQ...再检查下你的&6玩家名&c和&6Token&c吧QWQ！
+  BindSuccessful: |-
+    &a绑定成功QWQ！
+  Requested: |-
+    申请成功QWQ！
+    请在游戏中使用{command}来完成绑定！
+  HasBind: |-
+    你的QQ已经绑定了{player}！
+    不能再绑定了QAQ！
+  DontSpam: |-
+    不要刷屏哦QWQ!
+  Balance: |-
+    你的余额：{eco}个W币QWQ！
+  Failed: |-
+    啊哦，貌似失败了QAQ！
+  SignInSucceed: |-
+    签到成功QWQ！你获得了{eco}个W币！
+  SignInFailed: |-
+    签到失败QAQ...再等等吧QWQ...
+  HasNoMoney: |-
+    余额不足QAQ...
+  HasNoBind: |-
+    你没有绑定账号QAQ...
+  NoBind: |-
+    这个人没有绑定账号QWQ！
+  QueryBind: |-
+    这个人绑定的账号是：{player}
+  BindNotice: |-
+    &c服务器开启了强制绑定账号，请先绑定
 ```

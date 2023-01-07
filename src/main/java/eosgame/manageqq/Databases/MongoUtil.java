@@ -79,4 +79,15 @@ public class MongoUtil {
             return false;
         }
     }
+
+    public static boolean updateOne(String coll, Document from, Document to){
+        try{
+            db.getCollection(coll).updateOne(from,to);
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

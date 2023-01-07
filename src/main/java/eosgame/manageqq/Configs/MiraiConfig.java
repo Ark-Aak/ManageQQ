@@ -16,7 +16,7 @@ public class MiraiConfig {
     }
 
     public static String getVerifyKey(){
-        return ManageQQ.instance.getConfig().getString("MCL.verifyKey");
+        return ManageQQ.instance.getConfig().getString("MCL.VerifyKey");
     }
 
     public static String getMiraiFullUrl(){
@@ -40,11 +40,11 @@ public class MiraiConfig {
     }
 
     public static long getQueryDelay(){
-        return ManageQQ.instance.getConfig().getLong("MCL.queryDelay");
+        return ManageQQ.instance.getConfig().getLong("MCL.QueryDelay");
     }
 
     public static long getQueryPeriod(){
-        return ManageQQ.instance.getConfig().getLong("MCL.queryPeriod");
+        return ManageQQ.instance.getConfig().getLong("MCL.QueryPeriod");
     }
 
     public static long getBanLimit(){
@@ -61,5 +61,37 @@ public class MiraiConfig {
 
     public static long getSpamMute(){
         return ManageQQ.instance.getConfig().getLong("Bot.SpamMute");
+    }
+
+    public static long getTimeLimit(){
+        return ManageQQ.instance.getConfig().getLong("Bot.TimeLimit");
+    }
+
+    public static long getSignInTimeLimit(){
+        return ManageQQ.instance.getConfig().getLong("Bot.SignInTimeLimit");
+    }
+
+    public static String getCommandPrefix(){
+        return ManageQQ.instance.getConfig().getString("Bot.CommandPrefix");
+    }
+
+    public static long getMaxSignInCoin(){
+        return ManageQQ.instance.getConfig().getLong("Bot.MaxSignInCoin");
+    }
+
+    public static long getPutCaveCost(){
+        return ManageQQ.instance.getConfig().getLong("Bot.PutCaveCost");
+    }
+
+    public static boolean getEnable(){
+        return ManageQQ.instance.getConfig().getBoolean("Bot.Enable");
+    }
+
+    public static long getBindTimeOut(){
+        return ManageQQ.instance.getConfig().getLong("Bot.BindTimeOut");
+    }
+
+    public static boolean getForceBind(){
+        return ManageQQ.instance.getConfig().getBoolean("Bot.ForceBind");
     }
 }

@@ -3,6 +3,7 @@ package eosgame.manageqq.Commands;
 import eosgame.manageqq.Configs.BaseConfig;
 import eosgame.manageqq.Configs.MessageConfig;
 import eosgame.manageqq.Exceptions.MiraiUnknownException;
+import eosgame.manageqq.Listener.PlayerJoinHandler;
 import eosgame.manageqq.Logger;
 import eosgame.manageqq.ManageQQ;
 import eosgame.manageqq.Mirai.MiraiBotUtil;
@@ -62,6 +63,10 @@ public class mqqExecutor implements TabExecutor {
                     if(BindUtil.checkToken(sender.getName(),args[1])){
                         BindUtil.addBind(sender.getName());
                         sender.sendMessage(StringUtil.coloredString(MessageConfig.getBindSuccessful()));
+                        if(PlayerJoinHandler.mp.containsKey(sender.getName())){
+                            PlayerJoinHandler.mp.get(sender.getName()).cancel();
+                            PlayerJoinHandler.mp.remove(sender.getName());
+                        }
                         return true;
                     }
                     else{

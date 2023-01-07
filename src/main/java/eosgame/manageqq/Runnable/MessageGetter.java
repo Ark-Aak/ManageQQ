@@ -3,6 +3,7 @@ package eosgame.manageqq.Runnable;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import eosgame.manageqq.Configs.MessageConfig;
+import eosgame.manageqq.Configs.MiraiConfig;
 import eosgame.manageqq.Logger;
 import eosgame.manageqq.ManageQQ;
 import eosgame.manageqq.Mirai.*;
@@ -22,6 +23,9 @@ public class MessageGetter extends BukkitRunnable {
 
     @Override
     public void run() {
+        if(!MiraiConfig.getEnable()){
+            return;
+        }
         List<MessageChain> messageChains = new ArrayList<>();
         if((int) MiraiNetworkUtil.getQueueMessageCount(session).getData() == 0){
             Logger.debug("没有收到消息...");

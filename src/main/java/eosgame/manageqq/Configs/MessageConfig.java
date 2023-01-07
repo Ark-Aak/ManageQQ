@@ -1,6 +1,7 @@
 package eosgame.manageqq.Configs;
 
 import eosgame.manageqq.ManageQQ;
+import eosgame.manageqq.Utils.StringUtil;
 
 public class MessageConfig {
 
@@ -66,5 +67,41 @@ public class MessageConfig {
 
     public static String getDontSpam(){
         return ManageQQ.instance.getConfig().getString("Message.DontSpam");
+    }
+
+    public static String getBalance(){
+        return ManageQQ.instance.getConfig().getString("Message.Balance");
+    }
+
+    public static String getFailed(){
+        return ManageQQ.instance.getConfig().getString("Message.Failed");
+    }
+
+    public static String getSignInSucceed(){
+        return ManageQQ.instance.getConfig().getString("Message.SignInSucceed");
+    }
+
+    public static String getSignInFailed(){
+        return ManageQQ.instance.getConfig().getString("Message.SignInFailed");
+    }
+
+    public static String getHasNoMoney(){
+        return ManageQQ.instance.getConfig().getString("Message.HasNoMoney");
+    }
+
+    public static String getHasNoBind(){
+        return ManageQQ.instance.getConfig().getString("Message.HasNoBind");
+    }
+
+    public static String getNoBind(){
+        return ManageQQ.instance.getConfig().getString("Message.NoBind");
+    }
+
+    public static String getQueryBind(){
+        return ManageQQ.instance.getConfig().getString("Message.QueryBind");
+    }
+
+    public static String getBindNotice(){
+        return StringUtil.coloredString(ManageQQ.instance.getConfig().getString("Message.BindNotice"));
     }
 }
