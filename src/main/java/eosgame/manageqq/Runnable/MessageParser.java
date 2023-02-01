@@ -54,6 +54,9 @@ public class MessageParser extends BukkitRunnable {
                 double sim = StringUtil.getSimilarityRatio(last, msg.toPlain());
                 long lastSum = 0L;
                 long now = new Date().getTime(), lastSend = 0L;
+                if(now - lastSend > MiraiConfig.getTimeLimit()){
+                    return;
+                }
                 if(SimTot.containsKey(msg.getSender().getId())){
                     lastSum = SimTot.get(msg.getSender().getId());
                 }
@@ -61,7 +64,7 @@ public class MessageParser extends BukkitRunnable {
                     lastSend = lastTime.get(msg.getSender().getId());
                 }
                 long finalScore = lastSum;
-                if(sim >= MiraiConfig.getDetectLimit() || now - lastSend <= MiraiConfig.getTimeLimit()){
+                if(sim >= MiraiConfig.getDetectLimit()){
                     if(sim >= MiraiConfig.getDetectLimit()){
                         finalScore += (long)(sim*100);
                     }
