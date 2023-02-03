@@ -27,10 +27,11 @@ Bot:
   PutCaveCost: 500
   BindTimeOut: 2400
   ForceBind: true
-CustomCommands:
-  兑换L币:
-    Cost: 500
-    Command: "cmi money give {}"
+AutoReply:
+  Regex:
+    - ".*(为什么|为啥.+)[呢捏啊]?.*"
+  Reply:
+    - "你百度一下$1不就知道为什么了吗"
 Message:
   Help: |-
     测试下帮助QWQ

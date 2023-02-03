@@ -1,8 +1,7 @@
 package eosgame.manageqq.Runnable;
 
 import eosgame.manageqq.Configs.MiraiConfig;
-import eosgame.manageqq.Utils.BindUtil;
-import eosgame.manageqq.Utils.CaveUtil;
+import eosgame.manageqq.Utils.*;
 import eosgame.manageqq.Configs.DataBaseConfig;
 import eosgame.manageqq.Configs.MessageConfig;
 import eosgame.manageqq.Logger;
@@ -13,8 +12,6 @@ import eosgame.manageqq.Mirai.MiraiMember;
 import eosgame.manageqq.Mirai.MiraiNetworkUtil;
 import eosgame.manageqq.Mirai.MiraiUtil;
 import eosgame.manageqq.Network.NetworkUtil;
-import eosgame.manageqq.Utils.StringUtil;
-import eosgame.manageqq.Utils.UserUtil;
 import org.bson.Document;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -22,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.regex.Matcher;
 
 import static eosgame.manageqq.ManageQQ.*;
 
@@ -94,6 +92,19 @@ public class MessageParser extends BukkitRunnable {
             }
             lastMsg.put(msg.getSender().getId(), msg.toPlain());
             lastTime.put(msg.getSender().getId(), new Date().getTime());
+            List<String> regexs = MessageConfig.getRegex(), replys = MessageConfig.getReply();
+            for(int i=0;i<regexs.size();i++){
+                String regex = regexs.get(i), reply = replys.get(i);
+                Matcher match = RegexUtil.match(text,regex);
+                if(match.matches()){
+                    for(int j=1;j<=match.groupCount();j++){
+                        String placeholder = "$" + j;
+                        reply = StringUtil.replacePlaceholders(reply,placeholder,match.group(j));
+                    }
+                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(reply));
+                    return;
+                }
+            }
             if (text.startsWith(MiraiConfig.getCommandPrefix())) {
                 String[] args = text.split(" ");
                 args[0] = args[0].substring(MiraiConfig.getCommandPrefix().length());

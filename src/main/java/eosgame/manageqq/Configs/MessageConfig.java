@@ -3,6 +3,8 @@ package eosgame.manageqq.Configs;
 import eosgame.manageqq.ManageQQ;
 import eosgame.manageqq.Utils.StringUtil;
 
+import java.util.List;
+
 public class MessageConfig {
 
     public static String getHelp(){
@@ -103,5 +105,13 @@ public class MessageConfig {
 
     public static String getBindNotice(){
         return StringUtil.coloredString(ManageQQ.instance.getConfig().getString("Message.BindNotice"));
+    }
+
+    public static List<String> getReply(){
+        return ManageQQ.instance.getConfig().getStringList("AutoReply.Reply");
+    }
+
+    public static List<String> getRegex(){
+        return ManageQQ.instance.getConfig().getStringList("AutoReply.Regex");
     }
 }

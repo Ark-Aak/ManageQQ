@@ -1,12 +1,14 @@
 package eosgame.manageqq;
 
 import eosgame.manageqq.Configs.DataBaseConfig;
+import eosgame.manageqq.Configs.MessageConfig;
 import eosgame.manageqq.Configs.MiraiConfig;
 import eosgame.manageqq.Databases.MongoUtil;
 import eosgame.manageqq.Exceptions.MiraiUnknownException;
 import eosgame.manageqq.Mirai.MiraiBotUtil;
 import eosgame.manageqq.Runnable.MessageGetter;
 import eosgame.manageqq.Mirai.MiraiSession;
+import eosgame.manageqq.Runnable.MessageParser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,8 +48,7 @@ public final class ManageQQ extends JavaPlugin{
             saveDefaultConfig();
         }
         MiraiBotUtil.init(false);
-        log.info("sessionKey=" + session.sessionKey);
-        log.info("注册事件" + ChatColor.GREEN + "PlayerJoinEvent...");
+        log.info("注册监听器" + ChatColor.GREEN + "PlayerJoinHandler...");
         Bukkit.getPluginManager().registerEvents(new PlayerJoinHandler(), this);
         log.info("注册命令...");
         Objects.requireNonNull(Bukkit.getPluginCommand("mqq")).setExecutor(new mqqExecutor());
@@ -59,6 +60,13 @@ public final class ManageQQ extends JavaPlugin{
             MongoUtil.createCollection("bind");
             MongoUtil.createCollection("cave");
             MongoUtil.createCollection("user");
+        }
+        log.info("检查配置...");
+        if(MessageConfig.getReply().size() != MessageConfig.getRegex().size()){
+            log.severe("===============================");
+            log.severe("错误：AutoReply部分的回复和正则表达式不匹配！");
+            log.severe("===============================");
+            Bukkit.getPluginManager().disablePlugin(this);
         }
         log.info("插件已启动！感谢您的使用");
         log.info("===============================");
