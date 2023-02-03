@@ -64,6 +64,7 @@ public class MessageGetter extends BukkitRunnable {
             }
             messageChains.add(messageChain);
         }
+        Logger.debug("尝试启动解析线程");
         new MessageParser(messageChains).runTaskAsynchronously(ManageQQ.instance);
     }
 }

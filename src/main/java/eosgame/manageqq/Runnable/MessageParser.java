@@ -33,6 +33,7 @@ public class MessageParser extends BukkitRunnable {
 
     @Override
     public void run() {
+        Logger.debug("解析线程启动");
         for (MessageChain msg : messageChains) {
             String text = msg.toPlain();
             Logger.debug("消息文本：" + text);
@@ -52,37 +53,36 @@ public class MessageParser extends BukkitRunnable {
                 double sim = StringUtil.getSimilarityRatio(last, msg.toPlain());
                 long lastSum = 0L;
                 long now = new Date().getTime(), lastSend = 0L;
-                if(now - lastSend > MiraiConfig.getTimeLimit()){
-                    return;
-                }
-                if(SimTot.containsKey(msg.getSender().getId())){
-                    lastSum = SimTot.get(msg.getSender().getId());
-                }
-                if(lastTime.containsKey(msg.getSender().getId())){
-                    lastSend = lastTime.get(msg.getSender().getId());
-                }
-                long finalScore = lastSum;
-                if(sim >= MiraiConfig.getDetectLimit()){
+                if(now - lastSend <= MiraiConfig.getTimeLimit()){
+                    if(SimTot.containsKey(msg.getSender().getId())){
+                        lastSum = SimTot.get(msg.getSender().getId());
+                    }
+                    if(lastTime.containsKey(msg.getSender().getId())){
+                        lastSend = lastTime.get(msg.getSender().getId());
+                    }
+                    long finalScore = lastSum;
                     if(sim >= MiraiConfig.getDetectLimit()){
-                        finalScore += (long)(sim*100);
+                        if(sim >= MiraiConfig.getDetectLimit()){
+                            finalScore += (long)(sim*100);
+                        }
+                        if(now - lastSend <= MiraiConfig.getTimeLimit()){
+                            finalScore += MiraiConfig.getTimeLimit() - (now - lastSend);
+                        }
+                        SimTot.put(msg.getSender().getId(), finalScore);
                     }
-                    if(now - lastSend <= MiraiConfig.getTimeLimit()){
-                        finalScore += MiraiConfig.getTimeLimit() - (now - lastSend);
+                    else{
+                        SimTot.put(msg.getSender().getId(), lastSum-Math.min(MiraiConfig.getCountDown(),lastSum));
                     }
-                    SimTot.put(msg.getSender().getId(), finalScore);
-                }
-                else{
-                    SimTot.put(msg.getSender().getId(), lastSum-Math.min(MiraiConfig.getCountDown(),lastSum));
-                }
-                if(finalScore >= MiraiConfig.getBanLimit()){
-                    SimTot.put(msg.getSender().getId(), 0L);
-                    if(MiraiBotUtil.hasPermission(msg.getGroup(), msg.getSender())){
-                        msg.getSender().mute(MiraiConfig.getSpamMute());
+                    if(finalScore >= MiraiConfig.getBanLimit()){
+                        SimTot.put(msg.getSender().getId(), 0L);
+                        if(MiraiBotUtil.hasPermission(msg.getGroup(), msg.getSender())){
+                            msg.getSender().mute(MiraiConfig.getSpamMute());
+                        }
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDontSpam()));
+                        lastMsg.put(msg.getSender().getId(), msg.toPlain());
+                        lastTime.put(msg.getSender().getId(), new Date().getTime());
+                        return;
                     }
-                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDontSpam()));
-                    lastMsg.put(msg.getSender().getId(), msg.toPlain());
-                    lastTime.put(msg.getSender().getId(), new Date().getTime());
-                    return;
                 }
                 //MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("Sim value:" + sim + "\n" + "Sim total:" + SimTot.get(msg.getSender().getId())));
             }
@@ -92,19 +92,6 @@ public class MessageParser extends BukkitRunnable {
             }
             lastMsg.put(msg.getSender().getId(), msg.toPlain());
             lastTime.put(msg.getSender().getId(), new Date().getTime());
-            List<String> regexs = MessageConfig.getRegex(), replys = MessageConfig.getReply();
-            for(int i=0;i<regexs.size();i++){
-                String regex = regexs.get(i), reply = replys.get(i);
-                Matcher match = RegexUtil.match(text,regex);
-                if(match.matches()){
-                    for(int j=1;j<=match.groupCount();j++){
-                        String placeholder = "$" + j;
-                        reply = StringUtil.replacePlaceholders(reply,placeholder,match.group(j));
-                    }
-                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(reply));
-                    return;
-                }
-            }
             if (text.startsWith(MiraiConfig.getCommandPrefix())) {
                 String[] args = text.split(" ");
                 args[0] = args[0].substring(MiraiConfig.getCommandPrefix().length());
@@ -289,6 +276,26 @@ public class MessageParser extends BukkitRunnable {
                             }
                             return;
                         }
+                    }
+                }
+                List<String> regexs = MessageConfig.getRegex(), replys = MessageConfig.getReply();
+                Logger.debug("准备开始匹配正则");
+                for(int i=0;i<regexs.size();i++){
+                    String regex = regexs.get(i), reply = replys.get(i);
+                    Matcher match = RegexUtil.match(text,regex);
+                    Logger.debug("尝试将"+regex+"与"+text+"进行匹配");
+                    if(match.matches()){
+                        Logger.debug("匹配成功");
+                        Logger.debug(regex);
+                        for(int j=1;j<=match.groupCount();j++){
+                            String placeholder = "$" + j;
+                            reply = StringUtil.replacePlaceholders(reply,placeholder,match.group(j));
+                        }
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(reply));
+                        return;
+                    }
+                    else {
+                        Logger.debug("匹配失败");
                     }
                 }
                 MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoCommand()));
