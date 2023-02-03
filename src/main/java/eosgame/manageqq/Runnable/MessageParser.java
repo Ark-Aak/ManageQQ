@@ -92,6 +92,26 @@ public class MessageParser extends BukkitRunnable {
             }
             lastMsg.put(msg.getSender().getId(), msg.toPlain());
             lastTime.put(msg.getSender().getId(), new Date().getTime());
+            List<String> regexs = MessageConfig.getRegex(), replys = MessageConfig.getReply();
+            Logger.debug("准备开始匹配正则");
+            for(int i=0;i<regexs.size();i++){
+                String regex = regexs.get(i), reply = replys.get(i);
+                Matcher match = RegexUtil.match(text,regex);
+                Logger.debug("尝试将"+regex+"与"+text+"进行匹配");
+                if(match.matches()){
+                    Logger.debug("匹配成功");
+                    Logger.debug(regex);
+                    for(int j=1;j<=match.groupCount();j++){
+                        String placeholder = "$" + j;
+                        reply = StringUtil.replacePlaceholders(reply,placeholder,match.group(j));
+                    }
+                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(reply));
+                    break;
+                }
+                else {
+                    Logger.debug("匹配失败");
+                }
+            }
             if (text.startsWith(MiraiConfig.getCommandPrefix())) {
                 String[] args = text.split(" ");
                 args[0] = args[0].substring(MiraiConfig.getCommandPrefix().length());
@@ -276,26 +296,6 @@ public class MessageParser extends BukkitRunnable {
                             }
                             return;
                         }
-                    }
-                }
-                List<String> regexs = MessageConfig.getRegex(), replys = MessageConfig.getReply();
-                Logger.debug("准备开始匹配正则");
-                for(int i=0;i<regexs.size();i++){
-                    String regex = regexs.get(i), reply = replys.get(i);
-                    Matcher match = RegexUtil.match(text,regex);
-                    Logger.debug("尝试将"+regex+"与"+text+"进行匹配");
-                    if(match.matches()){
-                        Logger.debug("匹配成功");
-                        Logger.debug(regex);
-                        for(int j=1;j<=match.groupCount();j++){
-                            String placeholder = "$" + j;
-                            reply = StringUtil.replacePlaceholders(reply,placeholder,match.group(j));
-                        }
-                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(reply));
-                        return;
-                    }
-                    else {
-                        Logger.debug("匹配失败");
                     }
                 }
                 MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoCommand()));
