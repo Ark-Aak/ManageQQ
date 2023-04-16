@@ -98,7 +98,7 @@ public class MessageParser extends BukkitRunnable {
                 String regex = regexs.get(i), reply = replys.get(i);
                 Matcher match = RegexUtil.match(text,regex);
                 Logger.debug("尝试将"+regex+"与"+text+"进行匹配");
-                if(match.matches()){
+                if(match.find()){
                     Logger.debug("匹配成功");
                     Logger.debug(regex);
                     for(int j=1;j<=match.groupCount();j++){
