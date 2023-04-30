@@ -12,13 +12,19 @@ import eosgame.manageqq.Mirai.MiraiMember;
 import eosgame.manageqq.Mirai.MiraiNetworkUtil;
 import eosgame.manageqq.Mirai.MiraiUtil;
 import eosgame.manageqq.Network.NetworkUtil;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bson.Document;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 
 import static eosgame.manageqq.ManageQQ.*;
@@ -92,10 +98,12 @@ public class MessageParser extends BukkitRunnable {
             }
             lastMsg.put(msg.getSender().getId(), msg.toPlain());
             lastTime.put(msg.getSender().getId(), new Date().getTime());
-            List<String> regexs = MessageConfig.getRegex(), replys = MessageConfig.getReply();
+            List<String> regexs = MessageConfig.getRegex(), replys = MessageConfig.getReply(), datas = MessageConfig.getData();
             Logger.debug("准备开始匹配正则");
             for(int i=0;i<regexs.size();i++){
-                String regex = regexs.get(i), reply = replys.get(i);
+                String regex = regexs.get(i);
+                String reply = replys.get(i);
+                String[] data = datas.get(i).split("/");
                 Matcher match = RegexUtil.match(text,regex);
                 Logger.debug("尝试将"+regex+"与"+text+"进行匹配");
                 if(match.find()){
@@ -105,7 +113,30 @@ public class MessageParser extends BukkitRunnable {
                         String placeholder = "$" + j;
                         reply = StringUtil.replacePlaceholders(reply,placeholder,match.group(j));
                     }
-                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(reply));
+                    if(data[0].equals("true")){
+                        if(BindUtil.getBindById(msg.getSender().getId()) == null){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
+                        }
+                        else{
+                            final String offlineName = (String) Objects.requireNonNull(BindUtil.getBindById(msg.getSender().getId())).get("playerName");
+                            Callable<OfflinePlayer> callable = new Callable<OfflinePlayer>() {
+                                @Override
+                                public OfflinePlayer call() throws Exception {
+                                    return Bukkit.getOfflinePlayer(offlineName);
+                                }
+                            };
+                            Future<OfflinePlayer> future = instance.getServer().getScheduler().callSyncMethod(instance, callable);
+                            try {
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(),
+                                        MessageChain.buildChain(PlaceholderAPI.setPlaceholders(future.get(),reply)));
+                            } catch (InterruptedException | ExecutionException e) {
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getFailed()));
+                            }
+                        }
+                    }
+                    else{
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(PlaceholderAPI.setPlaceholders(SYSTEM,reply)));
+                    }
                     break;
                 }
                 else {

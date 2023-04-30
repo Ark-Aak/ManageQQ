@@ -114,4 +114,8 @@ public class MessageConfig {
     public static List<String> getRegex(){
         return ManageQQ.instance.getConfig().getStringList("AutoReply.Regex");
     }
+
+    public static List<String> getData(){
+        return ManageQQ.instance.getConfig().getStringList("AutoReply.Data");
+    }
 }

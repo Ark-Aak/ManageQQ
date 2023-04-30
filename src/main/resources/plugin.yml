@@ -5,6 +5,7 @@ api-version: 1.16
 prefix: ManageQQ
 load: POSTWORLD
 authors: [ Anschluss_zeit ]
+depend: [ PlaceholderAPI ]
 description: ManageQQ
 commands:
   mqq:

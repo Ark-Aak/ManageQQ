@@ -11,6 +11,7 @@ import eosgame.manageqq.Mirai.MiraiSession;
 import eosgame.manageqq.Runnable.MessageParser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public final class ManageQQ extends JavaPlugin{
     public static ConcurrentHashMap<Long, Long> SimTot = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<Long, String> lastMsg = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<Long, Long> lastTime = new ConcurrentHashMap<>();
+    public static OfflinePlayer SYSTEM;
 
     @Override
     public void onEnable() {
@@ -62,12 +64,16 @@ public final class ManageQQ extends JavaPlugin{
             MongoUtil.createCollection("user");
         }
         log.info("检查配置...");
-        if(MessageConfig.getReply().size() != MessageConfig.getRegex().size()){
+        if(MessageConfig.getReply().size() != MessageConfig.getRegex().size() ||
+                MessageConfig.getData().size() != MessageConfig.getRegex().size() ||
+                MessageConfig.getData().size() != MessageConfig.getReply().size()
+        ){
             log.severe("===============================");
-            log.severe("错误：AutoReply部分的回复和正则表达式不匹配！");
+            log.severe("错误：AutoReply部分的配置无法匹配！");
             log.severe("===============================");
             Bukkit.getPluginManager().disablePlugin(this);
         }
+        SYSTEM = Bukkit.getOfflinePlayer("SYSTEM");;
         log.info("插件已启动！感谢您的使用");
         log.info("===============================");
     }
