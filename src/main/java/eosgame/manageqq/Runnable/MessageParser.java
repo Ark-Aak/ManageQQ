@@ -119,12 +119,7 @@ public class MessageParser extends BukkitRunnable {
                         }
                         else{
                             final String offlineName = (String) Objects.requireNonNull(BindUtil.getBindById(msg.getSender().getId())).get("playerName");
-                            Callable<OfflinePlayer> callable = new Callable<OfflinePlayer>() {
-                                @Override
-                                public OfflinePlayer call() throws Exception {
-                                    return Bukkit.getOfflinePlayer(offlineName);
-                                }
-                            };
+                            Callable<OfflinePlayer> callable = () -> Bukkit.getOfflinePlayer(offlineName);
                             Future<OfflinePlayer> future = instance.getServer().getScheduler().callSyncMethod(instance, callable);
                             try {
                                 MiraiBotUtil.sendMessage(msg.getGroup().getId(),
@@ -165,18 +160,18 @@ public class MessageParser extends BukkitRunnable {
                     }
                     if (args[0].equals("回声洞")) {
                         if(!DataBaseConfig.getEnabled()){
-                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));
                             return;
                         }
                         Document doc = CaveUtil.getCave();
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(
-                                String.valueOf(doc.get("content")) + "\n——" + String.valueOf(doc.get("sender"))
+                                doc.get("content") + "\n——" + doc.get("sender")
                         ));
                         return;
                     }
                     if (args[0].equals("余额")){
                         if(!DataBaseConfig.getEnabled()){
-                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));
                             return;
                         }
                         String message = StringUtil.replacePlaceholders(MessageConfig.getBalance(),"{eco}",String.valueOf(UserUtil.getCoin(msg.getSender().getId())));
@@ -185,7 +180,7 @@ public class MessageParser extends BukkitRunnable {
                     }
                     if (args[0].equals("签到")){
                         if(!DataBaseConfig.getEnabled()){
-                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));
                             return;
                         }
                         Random rand = new Random();
@@ -195,18 +190,17 @@ public class MessageParser extends BukkitRunnable {
                             UserUtil.addCoin(msg.getSender().getId(),rnd);
                             String message = StringUtil.replacePlaceholders(MessageConfig.getSignInSucceed(),"{eco}",String.valueOf(rnd));
                             MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
-                            return;
                         }
                         else{
                             MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getSignInFailed()));
-                            return;
                         }
+                        return;
                     }
                 }
                 else if(args.length == 2){
                     if(command.equals("绑定")){
                         if(!DataBaseConfig.getEnabled()){
-                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));
                             return;
                         }
                         Document doc = BindUtil.getBindById(msg.getSender().getId());
@@ -231,14 +225,14 @@ public class MessageParser extends BukkitRunnable {
                         if(!SimTot.containsKey(target)){
                             SimTot.put(target,0L);
                         }
-                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(String.valueOf("Spam Score:" + SimTot.get(target))));
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("Spam Score:" + SimTot.get(target)));
                         return;
                     }
                 }
                 else if(args.length == 3){
                     if (command.equals("回声洞")) {
                         if(!DataBaseConfig.getEnabled()){
-                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));
                             return;
                         }
                         if(args[1].equals("投稿")) {
@@ -275,7 +269,14 @@ public class MessageParser extends BukkitRunnable {
                                 long target = Long.parseLong(args[2]);
                                 Document doc = BindUtil.getBindById(target);
                                 if(doc == null){
-                                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
+                                    doc = BindUtil.getBindByName(args[2]);
+                                    if(doc == null){
+                                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
+                                    }
+                                    else{
+                                        String message = StringUtil.replacePlaceholders(MessageConfig.getQueryBind(),"{player}",String.valueOf(doc.getLong("bindId")));
+                                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                                    }
                                 }
                                 else{
                                     String message = StringUtil.replacePlaceholders(MessageConfig.getQueryBind(),"{player}",doc.getString("playerName"));
@@ -286,14 +287,34 @@ public class MessageParser extends BukkitRunnable {
                             }
                             return;
                         }
-                        if(args[1].equals("游戏名查询")){
-                            Document doc = BindUtil.getBindByName(args[2]);
-                            if(doc == null){
-                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
-                            }
-                            else{
-                                String message = StringUtil.replacePlaceholders(MessageConfig.getQueryBind(),"{player}",String.valueOf(doc.getLong("bindId")));
-                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                        if(args[1].equals("清除")){
+                            try{
+                                long target = Long.parseLong(args[2]);
+                                Document doc = BindUtil.getBindById(target);
+                                if(doc == null){
+                                    doc = BindUtil.getBindByName(args[2]);
+                                    if(doc == null){
+                                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
+                                    }
+                                    else{
+                                        if(!BindUtil.deleteBindById(doc.getLong("bindId"))){
+                                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getFailed()));
+                                        }
+                                        else{
+                                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getOK()));
+                                        }
+                                    }
+                                }
+                                else{
+                                    if(!BindUtil.deleteBindByName(doc.getString("playerName"))){
+                                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getFailed()));
+                                    }
+                                    else{
+                                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getOK()));
+                                    }
+                                }
+                            }catch (NumberFormatException e){
+                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNotANumber()));
                             }
                             return;
                         }
@@ -302,7 +323,7 @@ public class MessageParser extends BukkitRunnable {
                 else if(args.length == 4){
                     if(command.equals("余额")){
                         if(!DataBaseConfig.getEnabled()){
-                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));;
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getDisabled()));
                             return;
                         }
                         if(args[1].equals("增加")){
@@ -332,6 +353,5 @@ public class MessageParser extends BukkitRunnable {
                 MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoCommand()));
             }
         }
-        return;
     }
 }

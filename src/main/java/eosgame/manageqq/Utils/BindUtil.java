@@ -73,4 +73,36 @@ public class BindUtil {
         }
         return docs.get(0);
     }
+
+    public static boolean deleteBindByName(String name){
+        BasicDBObject query = new BasicDBObject();
+        query.put("playerName",name);
+        List<Document> docs = MongoUtil.find("bind",query);
+        if(docs == null){
+            return false;
+        }
+        if(docs.size() == 0){
+            return false;
+        }
+        if(docs.size() != 1){
+            Logger.warn("警告！数据库可能出现错误！玩家名重复！");
+        }
+        return MongoUtil.deleteOne("bind",query);
+    }
+
+    public static boolean deleteBindById(long id){
+        BasicDBObject query = new BasicDBObject();
+        query.put("bindId",id);
+        List<Document> docs = MongoUtil.find("bind",query);
+        if(docs == null){
+            return false;
+        }
+        if(docs.size() == 0){
+            return false;
+        }
+        if(docs.size() != 1){
+            Logger.warn("警告！数据库可能出现错误！绑定ID重复！");
+        }
+        return MongoUtil.deleteOne("bind",query);
+    }
 }
