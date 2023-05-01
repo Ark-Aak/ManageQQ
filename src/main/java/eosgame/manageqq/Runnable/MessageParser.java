@@ -283,7 +283,14 @@ public class MessageParser extends BukkitRunnable {
                                     MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
                                 }
                             }catch (NumberFormatException e){
-                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNotANumber()));
+                                Document doc = BindUtil.getBindByName(args[2]);
+                                if(doc == null){
+                                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
+                                }
+                                else{
+                                    String message = StringUtil.replacePlaceholders(MessageConfig.getQueryBind(),"{player}",String.valueOf(doc.getLong("bindId")));
+                                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(message));
+                                }
                             }
                             return;
                         }
@@ -314,7 +321,18 @@ public class MessageParser extends BukkitRunnable {
                                     }
                                 }
                             }catch (NumberFormatException e){
-                                MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNotANumber()));
+                                Document doc = BindUtil.getBindByName(args[2]);
+                                if(doc == null){
+                                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoBind()));
+                                }
+                                else{
+                                    if(!BindUtil.deleteBindByName(doc.getString("playerName"))){
+                                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getFailed()));
+                                    }
+                                    else{
+                                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getOK()));
+                                    }
+                                }
                             }
                             return;
                         }
