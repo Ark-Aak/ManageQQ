@@ -144,6 +144,10 @@ public class MessageParser extends BukkitRunnable {
                 Logger.debug("检测到命令" + args[0]);
                 String command = args[0];
                 if(args.length == 1){
+                    if (command.equals("邀请")){
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(StringUtil.replacePlaceholders(MessageConfig.getInvitationCode(),"{code}",UserUtil.getInvitationCode(msg.getSender().getId()))));
+                        return;
+                    }
                     if (command.equals("你好")) {
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("你好QWQ！"));
                         return;
@@ -296,6 +300,10 @@ public class MessageParser extends BukkitRunnable {
                         }
                         if(args[1].equals("清除")){
                             try{
+                                if(msg.getSender().getPermission() == 0){
+                                    MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNoPermission()));
+                                    return;
+                                }
                                 long target = Long.parseLong(args[2]);
                                 Document doc = BindUtil.getBindById(target);
                                 if(doc == null){

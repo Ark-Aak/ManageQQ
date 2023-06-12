@@ -118,4 +118,16 @@ public class MessageConfig {
     public static List<String> getData(){
         return ManageQQ.instance.getConfig().getStringList("AutoReply.Data");
     }
+
+    public static String getInvitationCode(){
+        return StringUtil.coloredString(ManageQQ.instance.getConfig().getString("Message.InvitationCode"));
+    }
+
+    public static String getInvitationInfo(){
+        return StringUtil.coloredString(ManageQQ.instance.getConfig().getString("Message.InvitationInfo"));
+    }
+
+    public static String getInvitationAccept(){
+        return StringUtil.coloredString(ManageQQ.instance.getConfig().getString("Message.InvitationAccept"));
+    }
 }

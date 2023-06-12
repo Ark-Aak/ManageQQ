@@ -38,6 +38,8 @@ AutoReply:
     # 第一个表示是否需要绑定，第二个表示是否执行命令
     - "false/false"
     - "false/false"
+Invitation:
+  CodeLength: 16
 Message:
   Help: |-
     测试下帮助QWQ
@@ -92,3 +94,10 @@ Message:
     这个人绑定的账号是：{player}
   BindNotice: |-
     &c服务器开启了强制绑定账号，请先绑定
+  InvitationCode: |-
+    你的邀请码是：{code}
+  InvitationInfo: |-
+    {player}已经邀请了{times}个玩家！
+  InvitationAccept: |-
+    {inviter}成功邀请了{player} QWQ！
+    {inviter}已经邀请了{times}个玩家！
