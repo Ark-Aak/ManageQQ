@@ -14,7 +14,7 @@ Bot:
   BotId: 114514
   BanWord: |-
     傻逼/true/120
-  BanPeople: |-
+  BanId: |-
     1919810
   BanLimit: 500
   DetectLimit: 0.75
@@ -27,13 +27,14 @@ Bot:
   PutCaveCost: 500
   BindTimeOut: 2400
   ForceBind: true
+  RewardMultiplier: 150
 AutoReply:
   Regex:
     - "(为什么|为啥)(.*)"
     - "(为什么|为啥)(.*)[呢捏啊]"
   Reply:
-    - "你百度一下$1$2不就知道$1了吗"
-    - "你百度一下$1$2不就知道$1了吗"
+    - "你百度一下$(1)$(2)不就知道$(1)了吗"
+    - "你百度一下$(1)$(2)不就知道$(1)了吗"
   Data:
     # 第一个表示是否需要绑定，第二个表示是否执行命令
     - "false/false"
@@ -101,3 +102,5 @@ Message:
   InvitationAccept: |-
     {inviter}成功邀请了{player} QWQ！
     {inviter}已经邀请了{times}个玩家！
+  RewardDetail: |-
+    恭喜你获得了{reward}个W币 QWQ！

@@ -45,7 +45,7 @@ public class MessageParser extends BukkitRunnable {
             Logger.debug("消息文本：" + text);
             if(MiraiBotUtil.hasPermission(msg.getGroup(),msg.getSender())){
                 long muteTime = MiraiUtil.hasBanWord(text);
-                if(MiraiUtil.isBanPeople(msg.getSender().getId()) || muteTime != 0){
+                if(MiraiUtil.isBanId(msg.getSender().getId()) || muteTime != 0){
                     if(muteTime != 0){
                         msg.getSender().mute(muteTime);
                     }
@@ -110,8 +110,10 @@ public class MessageParser extends BukkitRunnable {
                     Logger.debug("匹配成功");
                     Logger.debug(regex);
                     for(int j=1;j<=match.groupCount();j++){
-                        String placeholder = "$" + j;
-                        reply = StringUtil.replacePlaceholders(reply,placeholder,match.group(j));
+                        String placeholder_old = "$" + j;
+                        if(j <= 9) reply = StringUtil.replacePlaceholders(reply,placeholder_old,match.group(j));
+                        String placeholder_new = "$(" + j + ")";
+                        reply = StringUtil.replacePlaceholders(reply,placeholder_new,match.group(j));
                     }
                     if(data[0].equals("true")){
                         if(BindUtil.getBindById(msg.getSender().getId()) == null){
@@ -232,6 +234,22 @@ public class MessageParser extends BukkitRunnable {
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain("Spam Score:" + SimTot.get(target)));
                         return;
                     }
+                    if(command.equals("抽奖")){
+                        double multiplier = MiraiConfig.getRewardMultiplier() / 100;
+                        long coins;
+                        try{
+                            coins = Long.parseLong(args[1]);
+                        }catch (Exception e){
+                            MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getNotANumber()));
+                            return;
+                        }
+                        Random rand = new Random();
+                        long result = Math.abs(rand.nextLong()) % ((long)(coins * multiplier)) + 1;
+                        UserUtil.addCoin(msg.getSender().getId(), result);
+                        MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(StringUtil.replacePlaceholders(
+                                MessageConfig.getRewardDetail(),"{reward}", String.valueOf(result))));
+                        return;
+                    }
                 }
                 else if(args.length == 3){
                     if (command.equals("回声洞")) {
@@ -259,6 +277,7 @@ public class MessageParser extends BukkitRunnable {
                             MiraiMember member = new MiraiMember(Long.parseLong(args[1]),msg.getGroup());
                             if(!MiraiBotUtil.hasPermission(msg.getGroup(),member)){
                                 MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(MessageConfig.getBotNoPermission()));
+                                return;
                             }
                             member.mute(Long.parseLong(args[2]));
                         }

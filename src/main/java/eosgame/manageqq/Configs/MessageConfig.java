@@ -35,8 +35,8 @@ public class MessageConfig {
         return ManageQQ.instance.getConfig().getString("Bot.BanWord");
     }
 
-    public static String getBanPeople(){
-        return ManageQQ.instance.getConfig().getString("Bot.BanPeople");
+    public static String getBanId(){
+        return ManageQQ.instance.getConfig().getString("Bot.BanId");
     }
 
     public static String getRecall(){
@@ -129,5 +129,9 @@ public class MessageConfig {
 
     public static String getInvitationAccept(){
         return StringUtil.coloredString(ManageQQ.instance.getConfig().getString("Message.InvitationAccept"));
+    }
+
+    public static String getRewardDetail(){
+        return StringUtil.coloredString(ManageQQ.instance.getConfig().getString("Message.RewardDetail"));
     }
 }

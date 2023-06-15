@@ -6,7 +6,7 @@
 
     <groupId>Plugin</groupId>
     <artifactId>ManageQQ</artifactId>
-    <version>D2.1b56</version>
+    <version>D2.1b57</version>
     <packaging>jar</packaging>
 
     <name>ManageQQ</name>

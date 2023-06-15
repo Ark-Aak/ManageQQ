@@ -94,4 +94,8 @@ public class MiraiConfig {
     public static boolean getForceBind(){
         return ManageQQ.instance.getConfig().getBoolean("Bot.ForceBind");
     }
+
+    public static double getRewardMultiplier(){
+        return ManageQQ.instance.getConfig().getDouble("Bot.RewardMultiplier");
+    }
 }

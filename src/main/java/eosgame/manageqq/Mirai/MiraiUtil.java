@@ -67,8 +67,8 @@ public class MiraiUtil {
         return 0;
     }
 
-    public static boolean isBanPeople(long id){
-        String[] people = MessageConfig.getBanPeople().split("\n");
+    public static boolean isBanId(long id){
+        String[] people = MessageConfig.getBanId().split("\n");
         for(String str : people){
             if(id == Long.parseLong(str)){
                 return true;
