@@ -245,6 +245,7 @@ public class MessageParser extends BukkitRunnable {
                         }
                         Random rand = new Random();
                         long result = Math.abs(rand.nextLong()) % ((long)(coins * multiplier)) + 1;
+                        UserUtil.addCoin(msg.getSender().getId(), -1 * coins);
                         UserUtil.addCoin(msg.getSender().getId(), result);
                         MiraiBotUtil.sendMessage(msg.getGroup().getId(), MessageChain.buildChain(StringUtil.replacePlaceholders(
                                 MessageConfig.getRewardDetail(),"{reward}", String.valueOf(result))));
