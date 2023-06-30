@@ -14,8 +14,6 @@ Bot:
   BotId: 114514
   BanWord: |-
     傻逼/true/120
-  BanId: |-
-    1919810
   BanLimit: 500
   DetectLimit: 0.75
   CountDown: 10
