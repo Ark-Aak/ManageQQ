@@ -44,11 +44,13 @@ public class MessageParser extends BukkitRunnable {
             Logger.debug("消息文本：" + text);
             if(MiraiBotUtil.hasPermission(msg.getGroup(),msg.getSender())){
                 long muteTime = MiraiUtil.hasBanWord(text);
-                if(muteTime != 0){
+                if(muteTime > 0){
                     msg.getSender().mute(muteTime);
                 }
-                MiraiNetworkUtil.recall(ManageQQ.session,groupId,msg.getMsgId());
-                MiraiBotUtil.sendMessage(groupId,MessageChain.buildChain(MessageConfig.getRecall()));
+                if(muteTime >= 0){
+                    MiraiNetworkUtil.recall(ManageQQ.session,groupId,msg.getMsgId());
+                    MiraiBotUtil.sendMessage(groupId,MessageChain.buildChain(MessageConfig.getRecall()));
+                }
                 return;
             }
             if(ManageQQ.lastMsg.containsKey(senderId) && ManageQQ.lastTime.containsKey(senderId)){

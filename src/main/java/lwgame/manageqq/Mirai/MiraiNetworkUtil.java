@@ -172,13 +172,10 @@ public class MiraiNetworkUtil {
     }
 
     public static MiraiNetworkResponse getMemberList(MiraiSession session, long target){
-        Json json = new Json();
-        json.set("sessionKey",session.sessionKey);
-        json.set("target",target);
         return new MiraiNetworkResponse(
-                NetworkUtil.sendPost(
+                NetworkUtil.sendGet(
                         MiraiConfig.getMiraiApi(MiraiAPIList.MEMBER_LIST),
-                        json.toJsonString()
+                        "sessionKey=" + session.sessionKey + "&target=" + target
                 )
         );
     }

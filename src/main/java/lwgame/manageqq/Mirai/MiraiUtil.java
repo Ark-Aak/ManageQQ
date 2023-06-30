@@ -65,7 +65,7 @@ public class MiraiUtil {
                 return Long.parseLong(part[2]);
             }
         }
-        return 0;
+        return -1;
     }
 
     public static ArrayList<Long> getMemberList(MiraiSession session, long target){
