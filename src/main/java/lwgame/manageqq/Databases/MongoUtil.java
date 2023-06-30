@@ -80,6 +80,16 @@ public class MongoUtil {
         }
     }
 
+    public static boolean deleteMany(String coll, BasicDBObject filter){
+        try{
+            db.getCollection(coll).deleteMany(filter);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+    }
+
     public static boolean updateOne(String coll, Document from, Document to){
         try{
             db.getCollection(coll).updateOne(from,to);
@@ -89,5 +99,9 @@ public class MongoUtil {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static void dropCollection(String coll){
+        db.getCollection(coll).drop();
     }
 }

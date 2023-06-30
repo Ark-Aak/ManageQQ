@@ -12,7 +12,6 @@ import lwgame.manageqq.Mirai.MiraiMember;
 import lwgame.manageqq.Mirai.MiraiNetworkUtil;
 import lwgame.manageqq.Mirai.MiraiUtil;
 import lwgame.manageqq.Network.NetworkUtil;
-import lwgame.manageqq.Utils.*;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -145,6 +144,10 @@ public class MessageParser extends BukkitRunnable {
                 String command = args[0];
                 if(args.length == 1){
                     if (command.equals("邀请")){
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(MessageConfig.getDisabled()));
+                            return;
+                        }
                         MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(StringUtil.replacePlaceholders(MessageConfig.getInvitationCode(),"{code}", UserUtil.getInvitationCode(senderId))));
                         return;
                     }
@@ -233,6 +236,10 @@ public class MessageParser extends BukkitRunnable {
                         return;
                     }
                     if(command.equals("抽奖")){
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(MessageConfig.getDisabled()));
+                            return;
+                        }
                         double multiplier = MiraiConfig.getRewardMultiplier() / 100;
                         long coins;
                         try{
@@ -248,6 +255,26 @@ public class MessageParser extends BukkitRunnable {
                         MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(StringUtil.replacePlaceholders(
                                 MessageConfig.getRewardDetail(),"{reward}", String.valueOf(result))));
                         return;
+                    }
+                    if(command.equals("数据库")){
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(MessageConfig.getDisabled()));
+                            return;
+                        }
+                        if(msg.getSender().getPermission() == 0){
+                            MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(MessageConfig.getNoPermission()));
+                            return;
+                        }
+                        if(args[1].equals("清空")){
+                            UserDatabaseUtil.clear();
+                            MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(MessageConfig.getOK()));
+                            return;
+                        }
+                        if(args[1].equals("重建")){
+                            UserDatabaseUtil.rebuild(groupId);
+                            MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(MessageConfig.getOK()));
+                            return;
+                        }
                     }
                 }
                 else if(args.length == 3){
@@ -286,6 +313,10 @@ public class MessageParser extends BukkitRunnable {
                         return;
                     }
                     if (command.equals("绑定")){
+                        if(!DataBaseConfig.getEnabled()){
+                            MiraiBotUtil.sendMessage(groupId, MessageChain.buildChain(MessageConfig.getDisabled()));
+                            return;
+                        }
                         if(args[1].equals("查询")){
                             try{
                                 long target = Long.parseLong(args[2]);
