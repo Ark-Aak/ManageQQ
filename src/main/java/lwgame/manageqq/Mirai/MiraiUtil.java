@@ -1,6 +1,7 @@
 package lwgame.manageqq.Mirai;
 
 import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import lwgame.manageqq.Configs.MessageConfig;
 import lwgame.manageqq.Exceptions.MiraiUnknownException;
 import lwgame.manageqq.Exceptions.MiraiVerifyKeyInvalidException;
@@ -72,8 +73,9 @@ public class MiraiUtil {
         MiraiNetworkResponse response = MiraiNetworkUtil.getMemberList(session, target);
         JSONArray data = response.getDataArray();
         ArrayList<Long> memberIds = new ArrayList<>();
-        for(Object memberId : data){
-            memberIds.add(Long.parseLong(String.valueOf(memberId)));
+        for(Object member : data){
+            JSONObject tmp = (JSONObject) member;
+            memberIds.add(Long.parseLong(String.valueOf(tmp.get("id"))));
         }
         return memberIds;
     }
